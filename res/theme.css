@@ -1,0 +1,97 @@
+:root, body {
+	color: var(--ct);
+}
+h1, h2, h3, h4 {
+	color: var(--ct-gray-dark);
+}
+body {
+	background-color: var(--cf);
+}
+body.pre-load,
+body.pre-load * {
+	transition: none;
+}
+input {
+	color: var(--ct);
+}
+
+@media (prefers-color-scheme: dark) {
+	html:not(.light) {
+		--cf: hsl(215, 15%, 12%);
+		--ct: hsl(0, 0%, 90%);
+	}
+}
+
+html.light {
+	--cf: white;
+	--ct: hsl(0, 0%, 20%);
+	--c-brand: hsl(212, 60%, 40%);
+	--c-brand-light: hsl(212, 60%, 60%);
+	--c-brand-dark: hsl(212, 50%, 30%);
+	--c-brand-contrast: hsl(0, 0%, 100%);
+	/* Fill colors */
+	--cf-next-level: hsla(0, 0%, 0%, 0.04);
+	--cf-gray: hsl(0, 0%, 80%);
+	--cf-gray-light: hsl(0, 0%, 96%);
+	--cf-gray-dark: hsl(0, 0%, 60%);
+	/* Text colors */
+	--ct-gray: hsl(0, 0%, 40%);
+	--ct-gray-light: hsl(0, 0%, 60%);
+	--ct-gray-dark: hsl(0, 0%, 30%);
+	/* Border colors */
+	--cb-gray: hsl(0, 0%, 80%);
+	--cb-gray-light: hsl(0, 0%, 90%);
+	--cb-gray-dark: hsl(0, 0%, 50%);
+}
+
+html.dark {
+	--cf: hsl(215, 15%, 12%);
+	--ct: hsl(0, 0%, 90%);
+	--c-brand: hsl(212, 60%, 40%);
+	--c-brand-light: hsl(212, 60%, 60%);
+	--c-brand-dark: hsl(212, 60%, 30%);
+	--c-brand-contrast: hsl(0, 0%, 80%);
+	/* Fill colors */
+	--cf-next-level: hsla(215, 15%, 100%, 0.02);
+	--cf-gray: hsl(215, 15%, 17%);
+	--cf-gray-light: hsl(215, 15%, 20%);
+	--cf-gray-dark: hsl(215, 15%, 15%);
+	/* Text colors */
+	--ct-gray: hsl(215, 15%, 60%);
+	--ct-gray-light: hsl(215, 15%, 40%);
+	--ct-gray-dark: hsl(215, 15%, 80%);
+	/* Border colors */
+	--cb-gray: hsl(215, 20%, 30%);
+	--cb-gray-light: hsl(215, 20%, 20%);
+	--cb-gray-dark: hsl(215, 20%, 40%);
+}
+
+html.light {
+    --cb-green: hsl(120, 41%, 53%);
+    --cf-green: hsla(120, 50%, 60%, 0.1);
+    --ct-green: hsl(120, 100%, 25%);
+    --cb-blue: hsl(200, 66%, 64%);
+    --cf-blue: hsla(200, 50%, 80%, 0.2);
+    --ct-blue: hsl(200, 100%, 25%);
+    --cb-yellow: hsl(28, 79%, 72%);
+    --cf-yellow: hsla(28, 100%, 60%, 0.2);
+    --ct-yellow: hsl(28, 100%, 25%);
+    --cb-red: hsl(0, 67%, 58%);
+    --cf-red: hsla(0, 50%, 60%, 0.1);
+    --ct-red: hsl(0, 100%, 25%);
+}
+
+html.dark  {
+    --cb-green: hsl(120, 41%, 33%);
+    --cf-green: hsla(120, 50%, 30%, 0.2);
+    --ct-green: hsl(120, 40%, 60%);
+    --cb-blue: hsl(200, 66%, 44%);
+    --cf-blue: hsla(200, 50%, 30%, 0.2);
+    --ct-blue: hsl(200, 40%, 60%);
+    --cb-yellow: hsl(28, 79%, 52%);
+    --cf-yellow: hsla(28, 50%, 40%, 0.2);
+    --ct-yellow: hsl(28, 40%, 60%);
+    --cb-red: hsl(0, 67%, 38%);
+    --cf-red: hsla(0, 50%, 40%, 0.2);
+    --ct-red: hsl(0, 40%, 60%);
+}
