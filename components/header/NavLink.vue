@@ -1,43 +1,44 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
-import Responsive from "./Responsive.vue";
-import tri from "./TriStateLink.vue";
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import Responsive from '../Responsive.vue'
+import tri from '../TriStateLink.vue'
 const props = defineProps({
 	// Used for vue-router
 	to: {
 		type: String,
-		default: "",
+		default: '',
 	},
 	// Used for page navigation
 	href: {
 		type: String,
-		default: "",
+		default: '',
 	},
+	// Used for title name display
 	title: String,
-});
-const emit = defineEmits(["active"]);
+})
+const emit = defineEmits(['active'])
 // Router watcher
-const route = useRoute();
+const route = useRoute()
 watch(
 	() => route.path,
 	(path) => {
-		active.value = path == props.to;
+		active.value = path == props.to
 	}
-);
-const active = ref(false);
+)
+const active = ref(false)
 watch(active, (active) => {
-	if (active) emit("active", props.title);
-});
-active.value = route.path == props.to;
+	if (active) emit('active', props.title)
+})
+active.value = route.path == props.to
 </script>
 
 <template>
-	<Responsive>
+	<responsive>
 		<tri nav-link :class="active ? 'active' : ''" :to="to" :href="href">
-			{{ title || "Untitled" }}{{}}
+			<slot />
 		</tri>
-	</Responsive>
+	</responsive>
 </template>
 
 <style scoped lang="scss">

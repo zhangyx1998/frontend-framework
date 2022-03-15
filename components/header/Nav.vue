@@ -1,16 +1,16 @@
 <script setup>
-import { ref } from "vue";
-import NavLink from "./NavLink.vue";
+import { ref } from 'vue'
+import NavLink from './NavLink.vue'
 const collapse = ref(window.innerWidth < 720),
-	title = ref(""),
+	title = ref(''),
 	expand = ref(false),
-	login = ref(false);
-window.addEventListener("resize", () => {
-	collapse.value = window.innerWidth < 720;
-});
+	login = ref(false)
+window.addEventListener('resize', () => {
+	collapse.value = window.innerWidth < 720
+})
 function activeTitle(val) {
-	title.value = val || "Untitled";
-	expand.value = false;
+	title.value = val || 'Untitled'
+	expand.value = false
 }
 </script>
 
@@ -28,29 +28,33 @@ function activeTitle(val) {
 			:collapse="collapse"
 			v-show="!collapse || expand"
 		>
-			<NavLink @active="activeTitle" to="/" title="主页" />
-			<NavLink
+			<nav-link @active="activeTitle" to="/" title="主页">主页</nav-link>
+			<nav-link
 				@active="activeTitle"
 				to="/redirect/to/docs.ysyx.org/"
 				title="项目资料"
-			/>
-			<NavLink
+				>项目资料</nav-link
+			>
+			<nav-link
 				@active="activeTitle"
 				to="/redirect/to/forum.ysyx.org/"
 				title="讨论区"
-			/>
-			<NavLink
+				>讨论区</nav-link
+			>
+			<nav-link
 				@active="activeTitle"
 				v-if="!login"
 				to="/register"
 				title="注册"
-			/>
-			<NavLink
+				>注册</nav-link
+			>
+			<nav-link
 				@active="activeTitle"
 				v-if="!login"
 				to="/login"
 				title="登录"
-			/>
+				>登录</nav-link
+			>
 		</div>
 	</transition>
 	<div v-if="collapse" class="page-title">{{ title }}</div>
@@ -127,10 +131,10 @@ function activeTitle(val) {
 .fade-leave-active,
 .side-slide-enter-active,
 .side-slide-leave-active {
-	transition-duration: .5s;
+	transition-duration: 0.5s;
 }
 .side-slide-leave-active {
-	transition-delay: .1s;
+	transition-delay: 0.1s;
 }
 
 .fade-enter-from,

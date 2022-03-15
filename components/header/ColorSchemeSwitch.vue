@@ -1,5 +1,5 @@
 <script setup>
-import Responsive from "./Responsive.vue";
+import Responsive from "../Responsive.vue";
 import { ref, watch } from "vue";
 const [AUTO, LIGHT, DARK] = [0, 1, 2],
 	override = ref(AUTO),
@@ -84,7 +84,7 @@ override.value =
 				></path>
 			</svg>
 		</transition-group>
-	</Responsive>
+	</responsive>
 </template>
 
 <style scoped>

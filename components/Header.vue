@@ -1,6 +1,6 @@
 <script setup>
-import Nav from "./Nav.vue";
-import ColorSchemeSwitch from "./ColorSchemeSwitch.vue";
+import Nav from "./header/Nav.vue";
+import ColorSchemeSwitch from "./header/ColorSchemeSwitch.vue";
 import { ref, watch } from "vue";
 // Loading animation
 const props = defineProps({

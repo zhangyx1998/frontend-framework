@@ -57,6 +57,14 @@ div[custom-form] {
 			color: var(--ct-red);
 			font-size: 0.8em;
 		}
+		[info-text] {
+			color: var(--ct-gray);
+			font-size: 0.8em;
+		}
+		[success-text] {
+			color: var(--ct-green);
+			font-size: 0.8em;
+		}
 	}
 	label {
 		& > * {

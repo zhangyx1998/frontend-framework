@@ -26,6 +26,6 @@ defineProps({
 				style="margin-right: 0.5em"
 			></i>
 			<span style="font-size: 0.8em"><slot></slot></span>
-		</Responsive>
+		</responsive>
 	</div>
 </template>
