@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import createApi from '@CL/api'
+import sha256 from '@CL/sha256'
 const api = Object.freeze({
+		user: createApi({ url: '/user' }),
 		login: createApi({ url: '/login' }),
 		logout: createApi({ url: '/logout' }),
 	}),
@@ -23,8 +25,8 @@ export default defineStore('user', {
 		 * @param {(String) => Any} onFail Callback function for failed attempt
 		 * @returns {Boolean} Indicates whether login was successful
 		 */
-		async login(login, password, onFail = onFail) {
-			const result = await api.login({ login, password })
+		async login(login, password, onFail = () => {}) {
+			const result = await api.login({ login, password: sha256(password) })
 				.then(async res => {
 					if (!res.ok) {
 						onFail(await res.text())
@@ -33,14 +35,13 @@ export default defineStore('user', {
 					} else {
 						try {
 							// Patch user info json into the store
-							this.$patch(await res.json())
+							return await this.update(await res.json())
 						} catch (e) {
 							this.$reset()
 							onFail('[X] Server response is malformed')
 							return false
 						}
 					}
-					return this.loginState = true
 				})
 		},
 		/**
@@ -48,7 +49,7 @@ export default defineStore('user', {
 		 * @param {(String) => Any} onFail Callback function for failed attempt
 		 * @returns {Boolean} Indicates whether logout was successful
 		 */
-		async logout(onFail = onFail) {
+		async logout(onFail = () => {}) {
 			if (!this.loginState) {
 				this.$reset()
 				return true
@@ -62,6 +63,24 @@ export default defineStore('user', {
 			if (result)
 				this.$reset()
 			return result
+		},
+		/**
+		 * Update user store
+		 * @param {(String) => Any} onFail Callback function for failed attempt
+		 * @returns {Boolean} Indicates whether logout was successful
+		 */
+		async update(userData) {
+			userData ||= await api.user().then(async res => {
+				if (res.ok) return await res.json()
+				else return undefined
+			})
+			if (userData) {
+				this.$patch(userData)
+				return this.loginState = true
+			} else {
+				this.$reset()
+				return false
+			}
 		}
 	}
 })

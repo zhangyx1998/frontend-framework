@@ -111,8 +111,9 @@ function keyDown() {
 	border: var(--wb) solid var(--cb);
 	filter: brightness(100%);
 	// Transition override
-	&, * {
-		transition-duration: .5s !important;
+	&,
+	* {
+		transition-duration: 0.5s !important;
 		transition-delay: 0 !important;
 	}
 	/* Default interaction */
@@ -123,7 +124,7 @@ function keyDown() {
 			border: var(--wb) solid var(--cb-hover);
 			background-color: var(--cf-hover);
 			filter: var(--filter-hover);
-			box-shadow: 0 0 5px 0 var(--c-brand-light);
+			box-shadow: 0 0 3px 0 var(--c-brand-light);
 		}
 		&:active,
 		&.active {
@@ -141,19 +142,27 @@ function keyDown() {
 	}
 	/* type: seamless */
 	&.seamless {
-		&:hover {
-			background-color: rgba(0, 0, 0, 0.1);
+		background-color: transparent;
+		--cf: transparent;
+		--filter-hover: brightness(110%);
+		--filter-active: brightness(120%);
+		&.brand {
+			--ct: var(--c-brand);
 		}
-		&:active,
-		&.active {
-			background-color: rgba(0, 0, 0, 0.2);
+		&.green {
+			--ct: var(--ct-green);
 		}
-		&:hover {
-			background-color: rgba(255, 255, 255, 0.1);
+		&.blue {
+			--ct: var(--ct-blue);
 		}
-		&:active,
-		&.active {
-			background-color: rgba(255, 255, 255, 0.2);
+		&.red {
+			--ct: var(--ct-red);
+		}
+		&.gray {
+			--ct: var(--ct-gray);
+		}
+		&.gray-brand {
+			--ct: var(--c-brand);
 		}
 	}
 	/* type: solid */

@@ -1,69 +1,145 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import Avatar from 'vue-avatar/src/Avatar.vue'
 import Responsive from '../Responsive.vue'
-import tri from '../TriStateLink.vue'
+import NavLink from './NavLink.vue'
+import btn from '@CC/Button.vue'
+import useUserStore from '@CS/user'
+import { router } from '@/router'
+const user = useUserStore(),
+// Component definition
+	emit = defineEmits(['active'])
+// Active title route match
+const route = useRoute()
+watch(() => route.path, checkPath)
+function checkPath(path) {
+	active.value = path == '/settings' ||
+		(path.startsWith('/user') && route.params?.userID == user.userID)
+}
+// Active title state maintenance
+const active = ref(false)
+watch(active, (active) => {
+	if (active)
+		if (route.path == '/settings')
+			emit('active', '账号设置')
+		else
+			emit('active', '我的主页')
+})
+checkPath(route.path)
+function gotoHomePage() {
+	router.push(router.resolve(`/user/${user.userID}/`))
+}
 </script>
 
 <template>
-	<responsive>
-		<tri nav-link :class="active ? 'active' : ''" :to="to" :href="href">
-			{{ title || "Untitled" }}{{}}
-		</tri>
-	</responsive>
+	<span mobile-placeholder></span>
+	<div user-badge-wrapper>
+		<nav-link user-hover-link :active="active">
+			{{ user.name }}
+		</nav-link>
+		<div user-info-wrapper>
+			<div user-info-pane>
+				<responsive @click="gotoHomePage" avatar-id-name>
+					<avatar :username="user.userID || ''" />
+					<div id-name>
+						<div name>{{ user.name }}</div>
+						<div id>{{ user.userID }}</div>
+					</div>
+				</responsive>
+				<div user-action-links>
+					<btn
+						to="/settings"
+						:type="
+							route.path == '/settings'
+								? 'solid brand'
+								: 'seamless'
+						"
+						>账号设置</btn
+					>
+					<btn
+						to="/logout"
+						:type="
+							route.path == '/logout'
+								? 'solid red'
+								: 'seamless red'
+						"
+						>退出登录</btn
+					>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped lang="scss">
-[nav-link] {
-	/* Appearance */
-	font-size: 0.92em;
-	text-decoration: none;
-	user-select: none;
-	color: var(--ct-gray-dark);
-	cursor: pointer;
-	font-weight: 500;
-	background: none !important;
-	display: block;
+[collapse="false"] [mobile-placeholder],
+[collapse="true"] [user-hover-link] {
+	display: none;
+}
+[mobile-placeholder] {
+	flex-grow: 1;
+}
+[collapse="false"] [user-badge-wrapper]:not(:hover) [user-info-wrapper] {
+	// Hover animation
+	transform-origin: 100% 0%;
+	opacity: 0;
+	transform: scale(0.8);
+	pointer-events: none;
+	transition-delay: 0.3s;
+}
+[user-info-wrapper] {
 	[collapse="false"] & {
-		height: 100%;
-		margin: 0 0.2em !important;
-		padding: 2px 0.5em;
-		display: block;
-		line-height: calc(var(--header-height) - 4px);
-		overflow: hidden;
-		&::after {
-			content: "";
-			display: block;
-			position: absolute;
-			left: 0.3em;
-			right: 0.3em;
-			bottom: 0;
-			height: 3px;
-			background-color: transparent;
-			transform: translateY(3px) scaleX(0);
-			transition: 1s var(--curve);
-		}
-		&:not(.active):hover::after {
-			background-color: var(--cb-gray);
-			transform: translateY(0) scaleX(1);
-		}
-		&.active::after {
-			background-color: var(--c-brand);
-			transform: translateY(0) scaleX(1);
+		padding: 10px 0;
+		position: fixed;
+		top: calc(var(--header-height));
+		right: calc(1.5rem);
+		transition-duration: 0.3s;
+		[user-info-pane] {
+			padding: 5px;
+			border-radius: 10px;
+			background-color: var(--cf);
+			box-shadow: 0 0 10px 0 var(--c-box-shadow);
 		}
 	}
-	[collapse="true"] & {
-		margin: 0 !important;
-		font-weight: bold;
-		font-size: 16px;
-		padding: 0.4em 1em;
-		display: block;
-		text-align: left;
-		border-left: 8px solid transparent;
-		line-height: calc(var(--header-height) - 4px);
-		&.active {
-			border-left: 8px solid var(--c-brand);
-			background-color: var(--cf-next-level) !important;
+	[user-info-pane] {
+		* {
+			display: flex;
+		}
+		[avatar-id-name] {
+			border-bottom: 1px solid var(--cb-gray-light);
+			flex-direction: row;
+			margin: 0;
+			justify-content: left;
+			[id-name] {
+				padding-left: 1em;
+				flex-direction: column;
+				justify-content: space-evenly;
+				[id] {
+					font-family: "Cascadia Code", "Courier New", Courier,
+						monospace;
+					font-size: 0.8em;
+					color: var(--ct-gray);
+				}
+			}
+			[collapse="true"] & {
+				padding: 1.2rem 1rem;
+			}
+			[collapse="false"] & {
+				padding: 0.6rem;
+				padding-bottom: 1rem;
+			}
+		}
+		[user-action-links] {
+			flex-direction: row;
+			margin: 0;
+			justify-content: space-evenly;
+			[collapse="true"] & {
+				padding: 0.5rem 0 0.8rem 0;
+			}
+			[collapse="false"] & {
+				padding-top: 0.2rem;
+			}
 		}
 	}
 }

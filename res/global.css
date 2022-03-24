@@ -24,9 +24,10 @@
 }
 
 html:not(.pre-load) * {
-	--curve: cubic-bezier(0.19, 1, 0.22, 1);
+	transition-delay: 0s;
 	transition-duration: 1s;
 	transition-timing-function: var(--curve);
+	--curve: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 body {
