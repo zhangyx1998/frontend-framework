@@ -1,0 +1,7 @@
+{
+	"name": "ysyx-frontend-common",
+	"version": "0.0.0",
+	"scripts": {
+		"hello": "cowsay hello"
+	}
+}
