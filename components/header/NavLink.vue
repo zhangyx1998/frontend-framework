@@ -16,6 +16,8 @@ const props = defineProps({
 	},
 	// Used for title name display
 	title: String,
+	disabled: Boolean,
+	active: Boolean,
 })
 const emit = defineEmits(['active'])
 // Router watcher
@@ -23,19 +25,27 @@ const route = useRoute()
 watch(
 	() => route.path,
 	(path) => {
-		active.value = path == props.to
+		isActive.value = path == props.to
 	}
 )
-const active = ref(false)
-watch(active, (active) => {
+const isActive = ref(false)
+watch(isActive, (active) => {
 	if (active) emit('active', props.title)
 })
-active.value = route.path == props.to
+isActive.value = route.path == props.to
 </script>
 
 <template>
 	<responsive>
-		<tri nav-link :class="active ? 'active' : ''" :to="to" :href="href">
+		<tri
+			nav-link
+			:class="[
+			active || isActive ? 'active' : '',
+			disabled ? 'disabled' : ''
+			]"
+			:to="to"
+			:href="href"
+		>
 			<slot />
 		</tri>
 	</responsive>
@@ -93,6 +103,10 @@ active.value = route.path == props.to
 			border-left: 8px solid var(--c-brand);
 			background-color: var(--cf-next-level) !important;
 		}
+	}
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.8;
 	}
 }
 </style>

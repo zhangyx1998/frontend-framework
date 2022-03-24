@@ -1,10 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import NavLink from './NavLink.vue'
+import UserBadge from './UserBadge.vue'
+import useUserStore from '@CS/user'
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
 const collapse = ref(window.innerWidth < 720),
 	title = ref(''),
 	expand = ref(false),
-	login = ref(false)
+	user = useUserStore(),
+	redirecting = ref(false),
+	route = useRoute()
 window.addEventListener('resize', () => {
 	collapse.value = window.innerWidth < 720
 })
@@ -12,6 +18,7 @@ function activeTitle(val) {
 	title.value = val || 'Untitled'
 	expand.value = false
 }
+watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'))
 </script>
 
 <template>
@@ -28,33 +35,56 @@ function activeTitle(val) {
 			:collapse="collapse"
 			v-show="!collapse || expand"
 		>
-			<nav-link @active="activeTitle" to="/" title="主页">主页</nav-link>
 			<nav-link
+				:disabled="redirecting"
+				@active="activeTitle"
+				to="/"
+				title="主页"
+				>主页</nav-link
+			>
+			<nav-link
+				:disabled="redirecting"
 				@active="activeTitle"
 				to="/redirect/to/docs.ysyx.org/"
 				title="项目资料"
 				>项目资料</nav-link
 			>
 			<nav-link
+				:disabled="redirecting"
 				@active="activeTitle"
 				to="/redirect/to/forum.ysyx.org/"
 				title="讨论区"
 				>讨论区</nav-link
 			>
 			<nav-link
+				:disabled="redirecting"
 				@active="activeTitle"
-				v-if="!login"
+				v-if="!user.loginState"
 				to="/register"
 				title="注册"
 				>注册</nav-link
 			>
 			<nav-link
+				:disabled="redirecting"
 				@active="activeTitle"
-				v-if="!login"
+				v-if="!user.loginState"
 				to="/login"
 				title="登录"
 				>登录</nav-link
 			>
+			<nav-link
+				:disabled="redirecting"
+				@active="activeTitle"
+				v-if="user.loginState"
+				to="/space"
+				title="个人空间"
+				>个人空间</nav-link
+			>
+			<user-badge
+				:disabled="redirecting"
+				@active="activeTitle"
+				v-if="user.loginState"
+			/>
 		</div>
 	</transition>
 	<div v-if="collapse" class="page-title">{{ title }}</div>
