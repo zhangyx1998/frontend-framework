@@ -22,6 +22,7 @@ const touch = ref(false)
 <style scoped lang="scss">
 [responsive] {
 	position: relative;
+	cursor: pointer;
 	&::before {
 		pointer-events: none;
 		display: block;
@@ -35,20 +36,11 @@ const touch = ref(false)
 	&.touch-up::before {
 		transition: .3s;
 		transition-delay: .1s;
-		-webkit-backdrop-filter: brightness(1);
-		backdrop-filter: brightness(1);
 	}
 
 	&.touch-down::before {
-		transition: .05s;
-		html.light & {
-			-webkit-backdrop-filter: brightness(0.9);
-			backdrop-filter: brightness(0.9);
-		}
-		html.dark & {
-			-webkit-backdrop-filter: brightness(1.1);
-			backdrop-filter: brightness(1.1);
-		}
+		transition: .1s;
+		background: var(--cf-next-level);
 	}
 }
 </style>
