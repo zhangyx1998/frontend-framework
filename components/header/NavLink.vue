@@ -66,7 +66,9 @@ isActive.value = route.path == props.to
 		height: 100%;
 		margin: 0 0.2em !important;
 		padding: 2px 0.5em;
-		display: block;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		line-height: calc(var(--header-height) - 4px);
 		overflow: hidden;
 		&::after {

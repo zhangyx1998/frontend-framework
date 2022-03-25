@@ -167,22 +167,20 @@ function keyDown() {
 	}
 	/* type: solid */
 	&.solid {
+		--ct: var(--c-brand-contrast);
 		/* solid brand */
 		&.brand {
-			--ct: var(--c-brand-contrast);
 			--cf: var(--c-brand);
 			--filter-hover: brightness(110%);
 			--filter-active: brightness(120%);
 		}
 		/* solid green */
 		html.light &.green {
-			--ct: var(--c-brand-contrast);
 			--cf: hsl(132, 48%, 36%);
 			--cf-hover: hsl(132, 44%, 40%);
 			--cf-active: hsl(132, 42%, 44%);
 		}
 		html.dark &.green {
-			--ct: var(--c-brand-contrast);
 			--cf: hsl(132, 48%, 36%);
 		}
 		/* solid blue */
@@ -268,6 +266,7 @@ function keyDown() {
 	/* disabled */
 	&.disabled {
 		cursor: not-allowed !important;
+		filter: saturate(0);
 	}
 }
 </style>

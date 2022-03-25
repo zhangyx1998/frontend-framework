@@ -1,29 +1,32 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import Avatar from 'vue-avatar/src/Avatar.vue'
+import Avatar from '@CC/Avatar.vue'
 import Responsive from '../Responsive.vue'
 import NavLink from './NavLink.vue'
 import btn from '@CC/Button.vue'
 import useUserStore from '@CS/user'
 import { router } from '@/router'
 const user = useUserStore(),
-// Component definition
-	emit = defineEmits(['active'])
+	// Component definition
+	emit = defineEmits(['active']),
+	props = defineProps({
+		disabled: Boolean
+	}),
+	route = useRoute()
 // Active title route match
-const route = useRoute()
 watch(() => route.path, checkPath)
 function checkPath(path) {
-	active.value = path == '/settings' ||
+	active.value = path == '/settings/' ||
 		(path.startsWith('/user') && route.params?.userID == user.userID)
 }
 // Active title state maintenance
 const active = ref(false)
-watch(active, (active) => {
-	if (active)
-		if (route.path == '/settings')
+watch(() => route.path, (path) => {
+	if (active.value)
+		if (path.startsWith('/settings/'))
 			emit('active', '账号设置')
-		else
+		else if (path.startsWith(`/user/${user.userID}/`))
 			emit('active', '我的主页')
 })
 checkPath(route.path)
@@ -35,13 +38,16 @@ function gotoHomePage() {
 <template>
 	<span mobile-placeholder></span>
 	<div user-badge-wrapper>
-		<nav-link user-hover-link :active="active">
-			{{ user.name }}
+		<nav-link user-hover-link :disabled="disabled" :active="active">
+			<avatar :userID="user.userID || ''" :size="1.6" />
+			<span style="margin-left: 0.5em; height: 100%">{{
+				user.name
+			}}</span>
 		</nav-link>
 		<div user-info-wrapper>
 			<div user-info-pane>
 				<responsive @click="gotoHomePage" avatar-id-name>
-					<avatar :username="user.userID || ''" />
+					<avatar :userID="user.userID || ''" :size="3" />
 					<div id-name>
 						<div name>{{ user.name }}</div>
 						<div id>{{ user.userID }}</div>
@@ -49,9 +55,9 @@ function gotoHomePage() {
 				</responsive>
 				<div user-action-links>
 					<btn
-						to="/settings"
+						to="/settings/"
 						:type="
-							route.path == '/settings'
+							route.path == '/settings/'
 								? 'solid brand'
 								: 'seamless'
 						"
@@ -94,7 +100,7 @@ function gotoHomePage() {
 		position: fixed;
 		top: calc(var(--header-height));
 		right: calc(1.5rem);
-		transition-duration: 0.3s;
+		transition-duration: 0.5s;
 		[user-info-pane] {
 			padding: 5px;
 			border-radius: 10px;

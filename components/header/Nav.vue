@@ -76,7 +76,7 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 				:disabled="redirecting"
 				@active="activeTitle"
 				v-if="user.loginState"
-				to="/space"
+				to="/space/"
 				title="个人空间"
 				>个人空间</nav-link
 			>

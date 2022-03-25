@@ -41,10 +41,10 @@ const props = defineProps({
 	&.next-level {
 		background-color: var(--cf-next-level);
 	}
-	&[pad=true] {
+	&[pad="true"] {
 		padding: 1rem 2rem;
 	}
-	&[frame=true] {
+	&[frame="true"] {
 		padding: 0;
 		position: absolute;
 		top: 0;
@@ -52,59 +52,68 @@ const props = defineProps({
 		width: 100%;
 		height: 100%;
 	}
-	@media (min-width: 1280px) {
-		&[type=plain] {
-			--space-h: calc((100vw - 1280px) / 2);
-			padding-left: var(--space-h);
-			padding-right: var(--space-h);
-		}
-	}
 	/* Colorful container boxes */
-	&:not([type=plain]) {
+	&:not([type="plain"]) {
 		margin: 0.8rem 0;
 		border-left: 8px solid var(--cb);
 		border-radius: 6px;
 		background-color: var(--cf);
 		color: var(--ct);
-		&[pad=true] {
+		&[pad="true"] {
 			padding: 1rem;
 		}
 	}
-	&[type=message] {
+	&[type="message"] {
 		--cb: var(--cb-gray);
 		--cf: var(--cf-gray-light);
 		--ct: var(--ct-gray);
 	}
-	&[type=info] {
+	&[type="info"] {
 		--cb: var(--cb-blue);
 		--cf: var(--cf-blue);
 		--ct: var(--ct-blue);
 	}
-	&[type=info].green {
+	&[type="info"].green {
 		--cb: var(--cb-green);
 		--cf: var(--cf-green);
 		--ct: var(--ct-green);
 	}
-	&[type=warn] {
+	&[type="warn"] {
 		--cb: var(--cb-yellow);
 		--cf: var(--cf-yellow);
 		--ct: var(--ct-yellow);
 	}
-	&[type=alert] {
+	&[type="alert"] {
 		--cb: var(--cb-red);
 		--cf: var(--cf-red);
 		--ct: var(--ct-red);
 	}
 	/* Attribute syntactic sugar */
-	&[flex] {
-		display: flex;
-		align-items: center;
+	&[w1280] {
+		@media (min-width: 1280px) {
+			--space-h: calc((100vw - 1280px) / 2);
+			padding-left: var(--space-h);
+			padding-right: var(--space-h);
+		}
+	}
+	&[flex-wrap] {
+		flex-wrap: wrap;
 	}
 	&[flex-row] {
+		display: flex;
 		flex-direction: row;
 	}
 	&[flex-column] {
+		display: flex;
 		flex-direction: column;
+	}
+	&[flex-row-reverse] {
+		display: flex;
+		flex-direction: row-reverse;
+	}
+	&[flex-column-reverse] {
+		display: flex;
+		flex-direction: column-reverse;
 	}
 	&[flex-center] {
 		justify-content: center;
@@ -126,6 +135,58 @@ const props = defineProps({
 	}
 	&[flex-grow] {
 		flex-grow: 1;
+	}
+	&[flex-shrink] {
+		flex-shrink: 1;
+	}
+	&[margin] {
+		margin: 10px;
+	}
+	&[margin-h] {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	&[margin-v] {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	&[round] {
+		border-radius: 10px;
+	}
+	&[round-2] {
+		border-radius: 20px;
+	}
+	&[round-3] {
+		border-radius: 30px;
+	}
+	&[content-block] > * {
+		display: block;
+	}
+	&[content-h-fill] > * {
+		display: block;
+		width: 100%;
+	}
+	&[content-v-fill] > * {
+		display: block;
+		height: 100%;
+	}
+	&[align-left] {
+		align-items: flex-start;
+	}
+	&[content-left] > * {
+		text-align: left;
+	}
+	&[align-center] {
+		align-items: center;
+	}
+	&[content-center] > * {
+		text-align: center;
+	}
+	&[align-right] {
+		align-items: flex-end;
+	}
+	&[content-right] > * {
+		text-align: right;
 	}
 }
 </style>

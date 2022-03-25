@@ -26,10 +26,12 @@ div[custom-form] {
 		margin-bottom: 10px;
 		text-align: left;
 	}
+	select,
 	input {
 		border: 1px solid var(--cb-gray);
 		padding: 5px 12px;
 		line-height: 24px;
+		height: 34px;
 		border-radius: 6px !important;
 		margin-top: 6px;
 		margin-bottom: 20px;
@@ -38,11 +40,13 @@ div[custom-form] {
 		background-color: var(--cf);
 		color: var(--ct-gray-dark);
 	}
+	select[disabled],
 	input[disabled] {
 		color: var(--ct-gray-light);
 		background-color: var(--cf-next-level);
 		cursor: not-allowed;
 	}
+	select:focus,
 	input:focus {
 		border-color: var(--c-brand);
 		outline: none;
