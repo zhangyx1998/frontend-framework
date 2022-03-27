@@ -10,7 +10,8 @@ const collapse = ref(window.innerWidth < 720),
 	expand = ref(false),
 	user = useUserStore(),
 	redirecting = ref(false),
-	route = useRoute()
+	route = useRoute(),
+	domain = location.host
 window.addEventListener('resize', () => {
 	collapse.value = window.innerWidth < 720
 })
@@ -45,14 +46,14 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
-				to="/redirect/to/docs.ysyx.org/"
+				:to="`/redirect/to/docs.${domain}/`"
 				title="项目资料"
 				>项目资料</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
-				to="/redirect/to/forum.ysyx.org/"
+				:to="`/redirect/to/forum.${domain}/`"
 				title="讨论区"
 				>讨论区</nav-link
 			>
@@ -76,7 +77,7 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 				:disabled="redirecting"
 				@active="activeTitle"
 				v-if="user.loginState"
-				to="/space/"
+				to="/space"
 				title="个人空间"
 				>个人空间</nav-link
 			>

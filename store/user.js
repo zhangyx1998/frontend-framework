@@ -26,7 +26,7 @@ export default defineStore('user', {
 		 * @returns {Boolean} Indicates whether login was successful
 		 */
 		async login(login, password, onFail = () => {}) {
-			const result = await api.login({ login, password: sha256(password) })
+			return await api.login({ login, password: sha256(password) })
 				.then(async res => {
 					if (!res.ok) {
 						onFail(await res.text())

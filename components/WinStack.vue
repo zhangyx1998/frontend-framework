@@ -11,7 +11,6 @@ _stack = function(title, component, arg, abortable = true) {
 	})
 }
 function onReturn(...args) {
-	console.log(args)
 	console.log(stack.value)
 	const { resolve } = stack.value.pop()
 	console.log(stack.value)
@@ -24,7 +23,7 @@ function onAbort() {
 	}
 }
 function activeFrame() {
-
+	
 }
 </script>
 

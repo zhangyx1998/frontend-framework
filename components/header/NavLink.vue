@@ -21,18 +21,22 @@ const props = defineProps({
 })
 const emit = defineEmits(['active'])
 // Router watcher
-const route = useRoute()
+const route = useRoute(),
+	checkUrl = (path = route.path) =>
+		isActive.value = !!props.to && (
+			props.to === '/'
+				? path == '/'
+				: path.startsWith(props.to)
+		)
 watch(
 	() => route.path,
-	(path) => {
-		isActive.value = path == props.to
-	}
+	checkUrl
 )
 const isActive = ref(false)
 watch(isActive, (active) => {
 	if (active) emit('active', props.title)
 })
-isActive.value = route.path == props.to
+checkUrl()
 </script>
 
 <template>
@@ -40,8 +44,8 @@ isActive.value = route.path == props.to
 		<tri
 			nav-link
 			:class="[
-			active || isActive ? 'active' : '',
-			disabled ? 'disabled' : ''
+				active || isActive ? 'active' : '',
+				disabled ? 'disabled' : '',
 			]"
 			:to="to"
 			:href="href"

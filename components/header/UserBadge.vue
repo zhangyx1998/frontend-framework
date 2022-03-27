@@ -17,17 +17,18 @@ const user = useUserStore(),
 // Active title route match
 watch(() => route.path, checkPath)
 function checkPath(path) {
-	active.value = path == '/settings/' ||
-		(path.startsWith('/user') && route.params?.userID == user.userID)
+	active.value = path.startsWith('/settings') || (
+		path.startsWith('/user') && route.params?.userID == user.userID
+	)
 }
 // Active title state maintenance
 const active = ref(false)
-watch(() => route.path, (path) => {
-	if (active.value)
-		if (path.startsWith('/settings/'))
-			emit('active', '账号设置')
-		else if (path.startsWith(`/user/${user.userID}/`))
-			emit('active', '我的主页')
+watch(active, () => {
+	const { path } = route
+	if (path.startsWith('/settings'))
+		emit('active', '账号设置')
+	else if (path.startsWith(`/user/${user.userID}`))
+		emit('active', '我的主页')
 })
 checkPath(route.path)
 function gotoHomePage() {

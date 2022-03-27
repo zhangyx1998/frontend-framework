@@ -1,6 +1,5 @@
 <script setup>
 import Btn from '@CC/Button.vue'
-import { defineEmits } from 'vue'
 const emit = defineEmits(['return']),
 	props = defineProps({
 		arg: {
