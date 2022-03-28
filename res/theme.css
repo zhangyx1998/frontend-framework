@@ -32,6 +32,7 @@ html.light {
 	--c-box-shadow: hsl(0, 0%, 50%);
 	/* Fill colors */
 	--cf-next-level: hsla(0, 0%, 0%, 0.04);
+	--cf-next-next-level: hsla(0, 0%, 0%, 0.06);
 	--cf-gray: hsl(0, 0%, 80%);
 	--cf-gray-light: hsl(0, 0%, 96%);
 	--cf-gray-dark: hsl(0, 0%, 60%);
@@ -55,6 +56,7 @@ html.dark {
 	--c-box-shadow: hsl(0, 0%, 5%);
 	/* Fill colors */
 	--cf-next-level: hsla(215, 15%, 100%, 0.02);
+	--cf-next-next-level: hsla(215, 15%, 100%, 0.1);
 	--cf-gray: hsl(215, 15%, 17%);
 	--cf-gray-light: hsl(215, 15%, 20%);
 	--cf-gray-dark: hsl(215, 15%, 15%);

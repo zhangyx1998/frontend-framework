@@ -40,7 +40,7 @@ const touch = ref(false)
 
 	&.touch-down::before {
 		transition: .1s;
-		background: var(--cf-next-level);
+		background-color: var(--cf-next-next-level);
 	}
 }
 </style>
