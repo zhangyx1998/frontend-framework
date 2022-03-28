@@ -276,6 +276,9 @@ window.v = { confirm, prompt }
 	&-enter-active,
 	&-leave-active {
 		transition-duration: 0.5s;
+		& * {
+			transition: 0s none !important;
+		}
 	}
 	&-enter-from,
 	&-leave-to {
