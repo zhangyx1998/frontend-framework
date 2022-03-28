@@ -1,27 +1,28 @@
 <script setup>
-import { ref, onMounted, markRaw, computed, watch } from 'vue'
+import { ref, onMounted, markRaw, computed, watch, onDeactivated } from 'vue'
 import Responsive from './Responsive.vue'
 const stack = ref([]), depth = ref(0), display = ref(false), direction = ref(1),
-	displayEl = computed(() => {
-		return stack.value[depth.value - 1]?.ref || stack.value[0]?.ref
-	}),
-	size = computed(() => {
-		const el = stack.value[depth.value - 1]?.ref || stack.value[0]?.ref
-		if (el) {
-			return {
-				w: displayEl.value.offsetWidth,
-				h: displayEl.value.offsetHeight,
-			}
-		} else {
-			return { w: 0, h: 0 }
-		}
-	}),
+	w = ref(0), h = ref(0),
 	showBackButton = computed(() => !!(depth.value > 1 && stack.value[depth.value].abortable)),
 	showCloseButton = computed(() => !!(
 		stack.value
 			.filter(({ abortable }, i) => abortable || i >= depth.value)
 			.reduce((a, b) => a && b, true)
 	))
+async function updateSize() {
+	const el = stack.value[depth.value - 1]?.ref || stack.value[0]?.ref
+	if (el) {
+		w.value = el.offsetWidth
+		h.value = el.offsetHeight
+	}
+}
+let interval
+onMounted(() => setInterval(updateSize, 100))
+onDeactivated(() => {
+	try {
+		clearInterval(interval)
+	} catch (e) {}
+})
 // Watch the depth and set a small delay before updating display
 watch(depth, (d, e) => {
 	direction.value = d - e
@@ -32,6 +33,7 @@ watch(depth, (d, e) => {
 			display.value = !!depth.value
 		}, 100);
 	}
+	updateSize()
 })
 // Initialize exposed enqueue function
 $ = function(title, component, abortable = true) {
@@ -108,8 +110,8 @@ function onAbort(all = false) {
 				<div
 					frame-container
 					:style="{
-						height: size.h + 'px',
-						width: size.w + 'px',
+						height: h + 'px',
+						width: w + 'px',
 					}"
 				>
 					<transition-group
