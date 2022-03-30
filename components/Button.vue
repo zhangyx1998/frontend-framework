@@ -118,13 +118,14 @@ function keyDown() {
 	}
 	/* Default interaction */
 	&:not(.disabled) {
+		box-shadow: 0 0 3px 0 transparent;
 		&:hover,
 		&:focus {
 			color: var(--ct-hover);
 			border: var(--wb) solid var(--cb-hover);
 			background-color: var(--cf-hover);
 			filter: var(--filter-hover);
-			box-shadow: 0 0 3px 0 var(--c-brand-light);
+			box-shadow: 0 0 3px 0 var(--cf-gray-dark);
 		}
 		&:active,
 		&.active {

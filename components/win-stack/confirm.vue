@@ -7,13 +7,10 @@
 
 <script>
 import Btn from '@CC/Button.vue'
-import { createFactory, guardFactory } from '@CL/factory'
 import { defineComponent } from 'vue'
-const options = defineComponent({
+export default defineComponent({
 	components: { Btn }
 })
-export default guardFactory(options)
-export const createConfirm = createFactory(options)
 </script>
 
 

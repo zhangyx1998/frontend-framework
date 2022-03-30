@@ -6,7 +6,7 @@ const stack = ref([]), depth = ref(0), display = ref(false), direction = ref(1),
 	showBackButton = computed(() => !!(depth.value > 1 && stack.value[depth.value].abortable)),
 	showCloseButton = computed(() => !!(
 		stack.value
-			.filter(({ abortable }, i) => abortable || i >= depth.value)
+			.map(({ abortable }, i) => i < depth.value ? abortable : true)
 			.reduce((a, b) => a && b, true)
 	))
 async function updateSize() {
@@ -36,10 +36,29 @@ watch(depth, (d, e) => {
 	updateSize()
 })
 // Initialize exposed enqueue function
-$ = function(title, component, abortable = true) {
-	markRaw(component)
+$ = function pushStack(title, component, { abortable = true }, ...args) {
 	return new Promise(resolve => {
-		stack.value[depth.value++] = { title, component, abortable, resolve }
+		stack.value[depth.value++] = {
+			title,
+			component: markRaw({
+				...component,
+				setup() {
+					if (typeof component?.setup === 'function')
+						return component?.setup(...args)
+					else
+						return { args }
+				},
+				emits: ['return', ...(component?.emits || [])],
+				methods: {
+					RETURN(...args) {
+						this.$emit('return', ...args)
+					},
+					...(component?.methods || {})
+				},
+			}),
+			abortable,
+			resolve
+		}
 	})
 }
 // Resolve the returned value to the caller
@@ -57,9 +76,9 @@ function onAbort(all = false) {
 	const { abortable } = stack.value[depth.value - 1]
 	if (abortable) {
 		onReturn()
+		// Recursively abort all abortable frames
+		if (all) onAbort(all)
 	}
-	// Recursively abort all abortable frames
-	if (all) onAbort(all)
 }
 </script>
 
@@ -138,21 +157,28 @@ function onAbort(all = false) {
 
 
 <script>
-import { createConfirm } from './win-stack/confirm.vue'
-import { createPrompt } from './win-stack/prompt.vue'
 /**
- * @param {Object} component the vue template to render into stack
- * @param {Boolean} abortable whether the window can be closed
- * @returns {Promise<Object | Boolean | Number | String>}
- * The execution result of current component
+ * @type {(
+ * 	title: String,
+ * 	component: import('vue').Component,
+ * 	{ [abortable]: Boolean },
+ * 	...args
+ * ) => Promise<Any>}
  */
-export let $ = function(title, component, abortable = true, standalone = false) {}
+export let $
 // Default stack function export
-export const confirm = (question, abortable) => $(question, createConfirm(), abortable)
-export const prompt = (title, content) => $(title, createPrompt(content))
-
-window.v = { confirm, prompt }
-// export const alert = (question, abortable) => $(vConfirm, true)
+import vConfirm from './win-stack/confirm.vue'
+export function confirm(title, abortable = false) { 
+	return $(title, vConfirm, { abortable })
+}
+import vPrompt from './win-stack/prompt.vue'
+export function prompt(title, content) {
+	return $(title, vPrompt, { abortable: true }, content)
+}
+import vSelect from './win-stack/select.vue'
+export function select(title, options, showKey = true, abortable = true) {
+	return $(title, vSelect, { abortable }, options, showKey)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -175,8 +201,9 @@ window.v = { confirm, prompt }
 	left: 0;
 	right: 0;
 	bottom: 0;
-	-webkit-backdrop-filter: blur(2px) saturate(0.8);
-	backdrop-filter: blur(2px) saturate(0.8);
+	-webkit-backdrop-filter: blur(2px);
+	backdrop-filter: blur(2px);
+	background-color: var(--cf-next-next-level);
 	&[display="false"] {
 		opacity: 0;
 		pointer-events: none;
@@ -192,7 +219,6 @@ window.v = { confirm, prompt }
 		left: 0;
 		right: 0;
 		bottom: 0;
-		width: 100%;
 		border-radius: 12px 12px 0 0;
 	}
 	@media (min-width: 720px) {

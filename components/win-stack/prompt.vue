@@ -4,16 +4,16 @@
 
 <script>
 import Btn from '@CC/Button.vue'
-import { createFactory, guardFactory, RETURN } from '@CL/factory'
 import { defineComponent } from 'vue'
-const options = defineComponent({
-	emits: ['return'],
-	components: { Btn }
+export default defineComponent({
+	components: { Btn },
+	setup(...args) {
+		const [content] = args
+		console.log(args)
+		return { content }
+	}
 })
-export default guardFactory(options)
-export const createPrompt = createFactory(options, content => ({ content }))
 </script>
-
 
 <style lang="scss" scoped>
 [prompt] {
