@@ -14,12 +14,28 @@ const props = defineProps({
 		default: "plain",
 		type: String,
 	},
+	responsive: {
+		type: Boolean,
+		default: false
+	}
 });
 </script>
 
 <template>
+	<responsive
+		container
+		v-if="responsive"
+		:type="type"
+		:pad="pad"
+		:frame="frame"
+		:class="[nextLevel ? 'next-level' : '']"
+	>
+		<div class="title" v-if="title">{{ title }}</div>
+		<slot></slot>
+	</responsive>
 	<div
 		container
+		v-else
 		:type="type"
 		:pad="pad"
 		:frame="frame"
@@ -151,12 +167,15 @@ const props = defineProps({
 		margin-bottom: 10px;
 	}
 	&[round] {
+		overflow: hidden;
 		border-radius: 10px;
 	}
 	&[round-2] {
+		overflow: hidden;
 		border-radius: 20px;
 	}
 	&[round-3] {
+		overflow: hidden;
 		border-radius: 30px;
 	}
 	&[content-block] > * {

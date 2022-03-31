@@ -1,5 +1,4 @@
 <script setup>
-import tri from "./TriStateLink.vue";
 import { ref, computed } from "vue";
 const props = defineProps({
 		type: {
@@ -213,36 +212,30 @@ function keyDown() {
 			--filter-active: brightness(92%);
 		}
 	}
-	/* type: outlined red */
-	&.outlined.red {
-		color: hsl(0, 48%, 36%);
-		--cf: hsla(0, 48%, 36%, 0);
-		--cf-hover: hsla(0, 44%, 40%, 0.04);
-		--cf-active: hsla(0, 42%, 44%, 0.02);
-		--cb: hsla(0, 48%, 36%, 0.4);
-		--cb-hover: hsla(0, 44%, 40%, 1);
-		--cb-active: hsla(0, 42%, 44%, 0.8);
-		--button-focus-outline-color: hsl(40, 100%, 50%);
-	}
-	/* outlined gray */
-	&.outlined.gray {
-		color: hsla(0, 0%, 0%, 0.48);
-		--cf: hsla(0, 0%, 0%, 0.08);
-		--cf-hover: hsla(0, 0%, 0%, 0.06);
-		--cf-active: hsla(0, 0%, 0%, 0.04);
-		--cb: hsla(0, 0%, 0%, 0.12);
-		--cb-hover: hsla(0, 0%, 0%, 0.48);
-		--cb-active: hsla(0, 0%, 0%, 0.3);
-	}
-	/* outlined white */
-	&.outlined.white {
-		color: hsla(0, 0%, 100%, 0.8);
-		--cf: hsla(0, 0%, 100%, 0.08);
-		--cf-hover: hsla(0, 0%, 100%, 0.07);
-		--cf-active: hsla(0, 0%, 100%, 0.06);
-		--cb: hsla(0, 0%, 100%, 0.3);
-		--cb-hover: hsla(0, 0%, 100%, 0.4);
-		--cb-active: hsla(0, 0%, 100%, 0.6);
+	&.outlined {
+		--cb: var(--ct);
+		--cf: transparent;
+		--cf-hover: var(--cf-next-level);
+		--cf-active: var(--cf-next-next-level);
+		border-width: 1px !important;
+		&.red {
+			--ct: var(--ct-red);
+		}
+		&.green {
+			--ct: var(--ct-green);
+		}
+		&.blue {
+			--ct: var(--ct-blue);
+		}
+		&.red {
+			--ct: var(--ct-red);
+		}
+		&.brand {
+			--ct: var(--c-brand-light);
+		}
+		&.gray {
+			--ct: var(--ct-gray);
+		}
 	}
 	/* link */
 	&.link {

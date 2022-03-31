@@ -22,17 +22,14 @@
 		</Responsive>
 	</div>
 	<div btn-group>
-		<btn type="solid gray" @click="reset">重置</btn>
 		<btn type="solid green" @click="RETURN(result)">确定</btn>
+		<btn type="solid gray" @click="reset">重置</btn>
 	</div>
 </template>
 
 <script>
-import Btn from '@CC/Button.vue'
-import Responsive from '@CC/Responsive.vue'
 import { defineComponent, ref } from 'vue'
 export default defineComponent({
-	components: { Btn, Responsive },
 	setup(options = [], showKey = false) {
 		options = ref(options.map((
 			[key, name = key, value = false, disabled = false]
@@ -113,18 +110,6 @@ export default defineComponent({
 			padding: 0.5em 0;
 			color: var(--ct-gray);
 		}
-	}
-}
-
-[btn-group] {
-	display: flex;
-	justify-content: center;
-	padding: 1em 0;
-	& > * {
-		margin: 1em;
-		max-width: 10em;
-		padding: 0.8em 2em;
-		width: calc(100% - 3em);
 	}
 }
 </style>

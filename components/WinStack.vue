@@ -1,18 +1,26 @@
 <script setup>
 import { ref, onMounted, markRaw, computed, watch, onDeactivated } from 'vue'
-import Responsive from './Responsive.vue'
 const stack = ref([]), depth = ref(0), display = ref(false), direction = ref(1),
 	w = ref(0), h = ref(0),
-	showBackButton = computed(() => !!(depth.value > 1 && stack.value[depth.value].abortable)),
+	showBackButton = computed(() => !!(
+			depth.value > 1
+			&& stack.value[depth.value - 1]?.abortable
+		)),
 	showCloseButton = computed(() => !!(
-		stack.value
+		!showBackButton
+		&& stack.value
 			.map(({ abortable }, i) => i < depth.value ? abortable : true)
 			.reduce((a, b) => a && b, true)
-	))
+	)),
+	transition = computed(() => direction.value ? 'push-left' : 'push-right'),
+	content = ref(null),
+	loading = ref(false)
 async function updateSize() {
-	const el = stack.value[depth.value - 1]?.ref || stack.value[0]?.ref
-	if (el) {
+	const el = content.value
+	if (el && w.value !== el.offsetWidth) {
 		w.value = el.offsetWidth
+	}
+	if (el && h.value !== el.offsetHeight) {
 		h.value = el.offsetHeight
 	}
 }
@@ -25,7 +33,8 @@ onDeactivated(() => {
 })
 // Watch the depth and set a small delay before updating display
 watch(depth, (d, e) => {
-	direction.value = d - e
+	direction.value = d > e
+	loading.value = false
 	if (d) {
 		display.value = true
 	} else {
@@ -33,10 +42,15 @@ watch(depth, (d, e) => {
 			display.value = !!depth.value
 		}, 100);
 	}
-	updateSize()
 })
+watch(content, updateSize)
+function onLoading(state) {
+	if (depth.value) {
+		stack.value[depth.value - 1].loading = !!state
+	}
+}
 // Initialize exposed enqueue function
-$ = function pushStack(title, component, { abortable = true }, ...args) {
+$ = function pushStack(title, component, { abortable = true } = {}, ...args) {
 	return new Promise(resolve => {
 		stack.value[depth.value++] = {
 			title,
@@ -48,7 +62,7 @@ $ = function pushStack(title, component, { abortable = true }, ...args) {
 					else
 						return { args }
 				},
-				emits: ['return', ...(component?.emits || [])],
+				emits: ['return', 'loading', ...(component?.emits || [])],
 				methods: {
 					RETURN(...args) {
 						this.$emit('return', ...args)
@@ -64,8 +78,11 @@ $ = function pushStack(title, component, { abortable = true }, ...args) {
 // Resolve the returned value to the caller
 function onReturn(...args) {
 	if (depth.value) {
-		const { resolve } = stack.value[--depth.value]
+		const { resolve } = stack.value[depth.value -= 1]
 		resolve(...args)
+		setTimeout(() => {
+			while(stack.value.length > depth.value) stack.value.pop()
+		}, 1000);
 	} else {
 		console.error('WinStack already drained')
 	}
@@ -92,7 +109,7 @@ function onAbort(all = false) {
 						button
 						back-button
 						:display="showBackButton"
-						@click="onAbort"
+						@click="onAbort(false)"
 					>
 						<svg viewBox="0 0 20 20">
 							<g style="fill: var(--ct-gray-dark)">
@@ -102,15 +119,21 @@ function onAbort(all = false) {
 							</g>
 						</svg>
 					</responsive>
-					<div
-						title-text
-						:style="{
-							left: `${showBackButton ? 3.6 : 0}rem`,
-							right: `${showCloseButton ? 3.6 : 0}rem`,
-						}"
-					>
-						{{ stack[stack.length - 1]?.title || "Untitled frame" }}
-					</div>
+					<transition-group :name="transition">
+						<div
+							title-text
+							:style="{
+								left: `${showBackButton ? 3.6 : 1.2}rem`,
+								right: `${showCloseButton ? 3.6 : 1.2}rem`,
+							}"
+							:key="depth"
+						>
+							{{
+								stack[depth && depth - 1]?.title ||
+								"Untitled frame"
+							}}
+						</div>
+					</transition-group>
 					<responsive
 						button
 						close-button
@@ -133,20 +156,25 @@ function onAbort(all = false) {
 						width: w + 'px',
 					}"
 				>
-					<transition-group
-						:name="direction > 0 ? 'push-left' : 'push-right'"
-					>
+					<transition-group :name="transition">
 						<div
 							frame-content
 							v-for="(el, i) in stack"
-							:key="[i, el.title].join('::')"
-							:ref="(_) => stack[i] && (stack[i].ref = _)"
+							:key="i"
+							:ref="
+								(_) => {
+									if (i + 1 == depth) content = _;
+								}
+							"
 						>
-							<component
-								:is="el.component"
-								@return="onReturn"
-								v-if="i + 1 == depth || (!i && !depth)"
-							/>
+							<keep-alive>
+								<component
+									:is="stack[i]?.component"
+									v-if="i + 1 == depth"
+									@return="onReturn"
+									@loading="onLoading"
+								/>
+							</keep-alive>
 						</div>
 					</transition-group>
 				</div>
@@ -168,8 +196,12 @@ function onAbort(all = false) {
 export let $
 // Default stack function export
 import vConfirm from './win-stack/confirm.vue'
-export function confirm(title, abortable = false) { 
-	return $(title, vConfirm, { abortable })
+export function confirm(title, content, { abortable = false, color, text }) { 
+	return $(title, vConfirm, { abortable }, content, { color, text })
+}
+import vAlert from './win-stack/alert.vue'
+export function alert(title, content) {
+	return $(title, vAlert, { abortable: true }, content)
 }
 import vPrompt from './win-stack/prompt.vue'
 export function prompt(title, content) {
@@ -265,13 +297,14 @@ export function select(title, options, showKey = true, abortable = true) {
 			left: 0;
 			right: 0;
 			bottom: 0;
-			padding: 1.2rem;
+			padding: 1.2rem 0;
 			height: 100%;
 			line-height: 100%;
 			color: var(--ct-gray);
 			font-size: 1.2rem;
 			font-weight: 500;
 			white-space: nowrap;
+			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 	}
@@ -295,6 +328,28 @@ export function select(title, options, showKey = true, abortable = true) {
 				max-height: 60vh;
 				max-width: 80vw;
 				min-width: 360px;
+			}
+			:deep([btn-group]) {
+				display: flex;
+				flex-direction: row-reverse;
+				flex-wrap: wrap;
+				justify-content: center;
+				padding: 1em 0;
+				border-top: 1px solid var(--cb-gray-light);
+				& > * {
+					margin: 1em;
+					flex-grow: 1;
+					max-width: 10em;
+					padding: 0.8em 2em;
+				}
+			}
+			:deep([frame-prompt]) {
+				text-align: left;
+				justify-content: center;
+				font-size: 1.2rem;
+				color: var(--ct-gray);
+				font-weight: normal;
+				padding: 2rem 1.2rem;
 			}
 		}
 	}
@@ -321,14 +376,18 @@ export function select(title, options, showKey = true, abortable = true) {
 }
 // Frame content animation
 .push {
+	&-left-enter-active,
+	&-right-enter-active {
+		transition-delay: 0.2s;
+	}
 	&-left-enter-from,
 	&-right-leave-to {
-		transform: translateX(30%);
+		transform: translateX(50%);
 		opacity: 0;
 	}
 	&-right-enter-from,
 	&-left-leave-to {
-		transform: translateX(-30%);
+		transform: translateX(-50%);
 		opacity: 0;
 	}
 }

@@ -1,10 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import Avatar from '@CC/Avatar.vue'
-import Responsive from '../Responsive.vue'
 import NavLink from './NavLink.vue'
-import btn from '@CC/Button.vue'
 import useUserStore from '@CS/user'
 import { router } from '@/router'
 const user = useUserStore(),

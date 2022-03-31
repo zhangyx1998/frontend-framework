@@ -1,8 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import Responsive from '../Responsive.vue'
-import tri from '../TriStateLink.vue'
 const props = defineProps({
 	// Used for vue-router
 	to: {

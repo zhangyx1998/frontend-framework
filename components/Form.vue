@@ -6,6 +6,9 @@
 
 <style lang="scss">
 div[custom-form] {
+	* {
+		user-select: none;
+	}
 	&[prompt] {
 		width: 100%;
 		max-width: 340px;
@@ -26,19 +29,23 @@ div[custom-form] {
 		margin-bottom: 10px;
 		text-align: left;
 	}
+	[form-input],
 	select,
 	input {
+		width: 100%;
 		border: 1px solid var(--cb-gray);
-		padding: 5px 12px;
-		line-height: 24px;
-		height: 34px;
-		border-radius: 6px !important;
 		margin-top: 6px;
 		margin-bottom: 20px;
-		display: block;
-		width: 100%;
+		padding: 5px 12px;
+		border-radius: 6px !important;
 		background-color: var(--cf);
 		color: var(--ct-gray-dark);
+	}
+	select,
+	input {
+		line-height: 24px;
+		height: 34px;
+		display: block;
 	}
 	select[disabled],
 	input[disabled] {
