@@ -106,11 +106,11 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 
 .nav-link-group[collapse="true"] {
 	flex-direction: column;
-	position: absolute;
+	position: fixed;
 	top: var(--header-height);
-	left: 40vw;
-	width: 60vw;
-	height: calc(100vh - 100%);
+	right: 0;
+	width: 65vw;
+	bottom: 0;
 	z-index: 1000;
 	box-shadow: 0 8px 10px 0 #0008;
 	-webkit-backdrop-filter: blur(10px);

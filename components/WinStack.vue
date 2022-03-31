@@ -6,12 +6,10 @@ const stack = ref([]), depth = ref(0), display = ref(false), direction = ref(1),
 			depth.value > 1
 			&& stack.value[depth.value - 1]?.abortable
 		)),
-	showCloseButton = computed(() => !!(
-		!showBackButton
-		&& stack.value
-			.map(({ abortable }, i) => i < depth.value ? abortable : true)
-			.reduce((a, b) => a && b, true)
-	)),
+	showCloseButton = computed(() => !stack.value
+			.filter(({ abortable }, i) => !abortable && i < depth.value)
+			.length
+	),
 	transition = computed(() => direction.value ? 'push-left' : 'push-right'),
 	content = ref(null),
 	loading = ref(false)
@@ -50,6 +48,7 @@ function onLoading(state) {
 	}
 }
 // Initialize exposed enqueue function
+let counter = 0
 $ = function pushStack(title, component, { abortable = true } = {}, ...args) {
 	return new Promise(resolve => {
 		stack.value[depth.value++] = {
@@ -70,6 +69,7 @@ $ = function pushStack(title, component, { abortable = true } = {}, ...args) {
 					...(component?.methods || {})
 				},
 			}),
+			uid: counter = ++counter | 0,
 			abortable,
 			resolve
 		}
@@ -126,7 +126,10 @@ function onAbort(all = false) {
 								left: `${showBackButton ? 3.6 : 1.2}rem`,
 								right: `${showCloseButton ? 3.6 : 1.2}rem`,
 							}"
-							:key="depth"
+							:key="
+								stack[depth && depth - 1]?.title +
+								(depth && depth - 1)
+							"
 						>
 							{{
 								stack[depth && depth - 1]?.title ||
@@ -160,17 +163,17 @@ function onAbort(all = false) {
 						<div
 							frame-content
 							v-for="(el, i) in stack"
-							:key="i"
+							:key="el.uid"
 							:ref="
 								(_) => {
 									if (i + 1 == depth) content = _;
 								}
 							"
-							v-show="i + 1 == depth"
+							v-show="i + 1 == depth || (!depth && !i)"
 						>
 							<keep-alive>
 								<component
-									:is="stack[i]?.component"
+									:is="el?.component"
 									@return="onReturn"
 									@loading="onLoading"
 								/>
@@ -196,7 +199,7 @@ function onAbort(all = false) {
 export let $
 // Default stack function export
 import vConfirm from './win-stack/confirm.vue'
-export function confirm(title, content, { abortable = false, color, text }) { 
+export function confirm(title, content, { abortable = false, color, text } = {}) { 
 	return $(title, vConfirm, { abortable }, content, { color, text })
 }
 import vAlert from './win-stack/alert.vue'
@@ -360,7 +363,7 @@ export function select(title, options, showKey = true, abortable = true) {
 	&-leave-active {
 		transition-duration: 0.5s;
 		& * {
-			transition: 0s none !important;
+			transition: none !important;
 		}
 	}
 	&-enter-from,
