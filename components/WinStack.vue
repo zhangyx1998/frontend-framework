@@ -166,11 +166,11 @@ function onAbort(all = false) {
 									if (i + 1 == depth) content = _;
 								}
 							"
+							v-show="i + 1 == depth"
 						>
 							<keep-alive>
 								<component
 									:is="stack[i]?.component"
-									v-if="i + 1 == depth"
 									@return="onReturn"
 									@loading="onLoading"
 								/>
