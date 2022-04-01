@@ -385,7 +385,7 @@ export function editLocale(title, name = {}) {
 .push {
 	&-left-enter-active,
 	&-right-enter-active {
-		transition-delay: 0.2s;
+		transition-delay: 0.1s;
 	}
 	&-left-enter-from,
 	&-right-leave-to {

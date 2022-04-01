@@ -24,13 +24,9 @@ function checkAvatarImage(url) {
 	if (url) {
 		avatarLoaded.value = false
 		fetch(url).then(res => {
-			const isValidImage =
-				res.ok &&
-				res.headers?.['content-type']?.startsWith('image') &&
-				true || false
-			hasAvatar.value = isValidImage
-			if (isValidImage) {
-				res.on('end', () => avatarLoaded.value = true)
+			hasAvatar.value = res.ok
+			if (res.ok) {
+				res.arrayBuffer().then(() => avatarLoaded.value = true)
 			}
 		})
 	}
@@ -48,9 +44,11 @@ function checkAvatarImage(url) {
 			'font-size': `${size}em`,
 		}"
 	>
-		<img avatar-image v-if="hasAvatar && avatarLoaded" :src="url" />
-		<chasing-circle :scale="0.5" v-else-if="hasAvatar" />
-		<div v-else avatar-char>{{ userID[0]?.toUpperCase() || "?" }}</div>
+		<transition-group name="fade">
+			<img avatar-image v-if="hasAvatar && avatarLoaded" :src="url" />
+			<chasing-circle :scale="0.5" v-else-if="hasAvatar" />
+			<div v-else avatar-char>{{ userID[0]?.toUpperCase() || "?" }}</div>
+		</transition-group>
 	</div>
 </template>
 
@@ -66,7 +64,7 @@ function checkAvatarImage(url) {
 		box-shadow: 0 0 5px 0 var(--c-brand-light);
 	}
 	& > * {
-		position: absolute;
+		position: absolute !important;
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
@@ -81,9 +79,15 @@ function checkAvatarImage(url) {
 		line-height: 1em;
 		// font-weight: 200;
 	}
-	[avatar-img] {
+	[avatar-image] {
 		width: 1em;
 		height: 1em;
+	}
+}
+.fade {
+	&-enter-from,
+	&-leave-to {
+		opacity: 0;
 	}
 }
 </style>
