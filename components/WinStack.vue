@@ -198,21 +198,25 @@ function onAbort(all = false) {
  */
 export let $
 // Default stack function export
-import vConfirm from './win-stack/confirm.vue'
+import Confirm from './frames/confirm.vue'
 export function confirm(title, content, { abortable = false, color, text } = {}) { 
-	return $(title, vConfirm, { abortable }, content, { color, text })
+	return $(title, Confirm, { abortable }, content, { color, text })
 }
-import vAlert from './win-stack/alert.vue'
+import Alert from './frames/alert.vue'
 export function alert(title, content) {
-	return $(title, vAlert, { abortable: true }, content)
+	return $(title, Alert, { abortable: true }, content)
 }
-import vPrompt from './win-stack/prompt.vue'
+import Prompt from './frames/prompt.vue'
 export function prompt(title, content) {
-	return $(title, vPrompt, { abortable: true }, content)
+	return $(title, Prompt, { abortable: true }, content)
 }
-import vSelect from './win-stack/select.vue'
+import Select from './frames/select.vue'
 export function select(title, options, showKey = true, abortable = true) {
-	return $(title, vSelect, { abortable }, options, showKey)
+	return $(title, Select, { abortable }, options, showKey)
+}
+import LocaleEditor from './locale/Editor.frame.vue'
+export function editLocale(title, name = {}) {
+	return $(title, LocaleEditor, { abortable: true }, name)
 }
 </script>
 
