@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 import createApi from '@CL/api'
 import sha256 from '@CL/sha256'
 const api = Object.freeze({
-	login: createApi({ url: '/login' }),
-	logout: createApi({ url: '/logout' }),
+	login: createApi('/login'),
+	logout: createApi('/logout'),
 })
 export default defineStore('user', {
 	state() {

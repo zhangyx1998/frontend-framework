@@ -38,6 +38,7 @@ function checkAvatarImage(userID) {
 			color: `var(--cb-${color})`,
 			'font-size': `${size}em`,
 		}"
+		style="border-radius: 0.5em"
 	>
 		<transition-group :name="transition">
 			<img avatar-image v-if="hasAvatar && dataURL" :src="dataURL" />
@@ -55,11 +56,11 @@ function getAvatar(userID) {
 	} else {
 		const request = fetch(`/user/${userID}/avatar`)
 		return avatarCache[userID] = {
-			hasAvatar: request.then(res => res.ok),
+			hasAvatar: request.then(res => res.ok).catch(() => {}),
 			dataURL: request.then(async res => {
 				if (!res.ok) return undefined
 				else return URL.createObjectURL(await res.blob())
-			})
+			}).catch(() => {})
 		}
 	}
 }
