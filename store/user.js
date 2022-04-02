@@ -2,11 +2,9 @@ import { defineStore } from 'pinia'
 import createApi from '@CL/api'
 import sha256 from '@CL/sha256'
 const api = Object.freeze({
-		user: createApi({ url: '/user' }),
-		login: createApi({ url: '/login' }),
-		logout: createApi({ url: '/logout' }),
-	}),
-	onFail = () => { }
+	login: createApi({ url: '/login' }),
+	logout: createApi({ url: '/logout' }),
+})
 export default defineStore('user', {
 	state() {
 		return {
@@ -25,7 +23,7 @@ export default defineStore('user', {
 		 * @param {(String) => Any} onFail Callback function for failed attempt
 		 * @returns {Boolean} Indicates whether login was successful
 		 */
-		async login(login, password, onFail = () => {}) {
+		async login(login, password, onFail = () => { }) {
 			return await api.login({ login, password: sha256(password) })
 				.then(async res => {
 					if (!res.ok) {
@@ -49,7 +47,7 @@ export default defineStore('user', {
 		 * @param {(String) => Any} onFail Callback function for failed attempt
 		 * @returns {Boolean} Indicates whether logout was successful
 		 */
-		async logout(onFail = () => {}) {
+		async logout(onFail = () => { }) {
 			if (!this.loginState) {
 				this.$reset()
 				return true
@@ -70,7 +68,7 @@ export default defineStore('user', {
 		 * @returns {Boolean} Indicates whether logout was successful
 		 */
 		async update(userData) {
-			userData ||= await api.user().then(async res => {
+			userData ||= await api.login().then(async res => {
 				if (res.ok) return await res.json()
 				else return undefined
 			})

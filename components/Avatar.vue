@@ -10,28 +10,23 @@ const props = defineProps({
 			default: 1
 		}
 	}),
-	url = computed(() => props.userID && `/user/${props.userID}/avatar`),
 	scheme = ['red', 'green', 'blue', 'yellow'],
 	color = computed(() => props.userID
 		? scheme[props.userID.charCodeAt(0) % scheme.length]
 		: 'gray'
 	),
 	hasAvatar = ref(false),
-	avatarLoaded = ref(false)
-watch(url, checkAvatarImage)
-onMounted(() => checkAvatarImage(url.value))
-function checkAvatarImage(url) {
-	if (url) {
-		avatarLoaded.value = false
-		fetch(url).then(res => {
-			hasAvatar.value = res.ok
-			if (res.ok) {
-				res.arrayBuffer().then(() => avatarLoaded.value = true)
-			}
-		})
-	}
-	else
-		hasAvatar.value = false
+	dataURL = ref(undefined),
+	transition = ref('')
+watch(() => props.userID, checkAvatarImage)
+onMounted(() => checkAvatarImage(props.userID))
+function checkAvatarImage(userID) {
+	const PROMISE = getAvatar(userID)
+	PROMISE.hasAvatar.then(val => hasAvatar.value = val)
+	PROMISE.dataURL.then(val => dataURL.value = val)
+	setTimeout(() => {
+		transition.value = 'fade'
+	}, 100);
 }
 </script>
 
@@ -44,13 +39,32 @@ function checkAvatarImage(url) {
 			'font-size': `${size}em`,
 		}"
 	>
-		<transition-group name="fade">
-			<img avatar-image v-if="hasAvatar && avatarLoaded" :src="url" />
+		<transition-group :name="transition">
+			<img avatar-image v-if="hasAvatar && dataURL" :src="dataURL" />
 			<chasing-circle :scale="0.5" v-else-if="hasAvatar" />
 			<div v-else avatar-char>{{ userID[0]?.toUpperCase() || "?" }}</div>
 		</transition-group>
 	</div>
 </template>
+
+<script>
+const avatarCache = {}
+function getAvatar(userID) {
+	if (userID in avatarCache) {
+		return avatarCache[userID]
+	} else {
+		const request = fetch(`/user/${userID}/avatar`)
+		return avatarCache[userID] = {
+			hasAvatar: request.then(res => res.ok),
+			dataURL: request.then(async res => {
+				if (!res.ok) return undefined
+				else return URL.createObjectURL(await res.blob())
+			})
+		}
+	}
+}
+</script>
+
 
 <style lang="scss" scoped>
 [avatar] {
