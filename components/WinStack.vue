@@ -1,7 +1,12 @@
 <script setup>
 import { ref, onMounted, markRaw, computed, watch, onDeactivated } from 'vue'
 const stack = ref([]), depth = ref(0), display = ref(false), direction = ref(1),
-	w = ref(0), h = ref(0),
+	size = ref({ w: 0, h: 0, f: false }),
+	sizeStyle = computed(() => ({
+		width: size.value.w + 'px',
+		height: size.value.h + 'px',
+		transition: size.value.f ? 'none' : undefined
+	})),
 	showBackButton = computed(() => !!(
 			depth.value > 1
 			&& stack.value[depth.value - 1]?.abortable
@@ -13,39 +18,40 @@ const stack = ref([]), depth = ref(0), display = ref(false), direction = ref(1),
 	transition = computed(() => direction.value ? 'push-left' : 'push-right'),
 	content = ref(null),
 	loading = ref(false)
-async function updateSize() {
-	const el = content.value
-	if (el && w.value !== el.offsetWidth) {
-		w.value = el.offsetWidth
-	}
-	if (el && h.value !== el.offsetHeight) {
-		h.value = el.offsetHeight
+let sizeUpdateCounter = 0
+function updateSize(nextTick = sizeUpdateCounter > 0 ? sizeUpdateCounter - 1 : 0) {
+	const 
+		el = content.value,
+		w = el?.offsetWidth,
+		h = el?.offsetHeight
+	sizeUpdateCounter = nextTick
+	if (!w || !h) return;
+	if (size.value.w !== w || size.value.h !== h) {
+		if (nextTick) {
+			size.value.f = true
+		} else {
+			size.value.f = false
+			size.value = { w, h }
+			sizeUpdateCounter = 10
+		}
 	}
 }
-let interval
-onMounted(() => setInterval(updateSize, 100))
-onDeactivated(() => {
-	try {
-		clearInterval(interval)
-	} catch (e) {}
-})
+watch(content, () => updateSize())
+setInterval(updateSize, 100)
 // Watch the depth and set a small delay before updating display
 watch(depth, (d, e) => {
 	direction.value = d > e
 	loading.value = false
 	if (d) {
 		display.value = true
-	} else {
-		setTimeout(() => {
-			display.value = !!depth.value
-		}, 100);
-	}
+	} else setTimeout(() => display.value = !!depth.value, 100)
 })
-watch(content, updateSize)
 function onLoading(state) {
+	loading.value = state
 	if (depth.value) {
 		stack.value[depth.value - 1].loading = !!state
 	}
+	if (state) updateSize()
 }
 // Initialize exposed enqueue function
 let counter = 0
@@ -103,7 +109,7 @@ function onAbort(all = false) {
 	<div frame-wrapper>
 		<div frame-background :display="display" @click="onAbort(true)"></div>
 		<transition name="frame">
-			<div frame-window v-if="display">
+			<div frame-window v-if="display" @transitionend="updateSize(0)">
 				<div frame-header>
 					<responsive
 						button
@@ -122,6 +128,7 @@ function onAbort(all = false) {
 					<transition-group :name="transition">
 						<div
 							title-text
+							frame-animation-element
 							:style="{
 								left: `${showBackButton ? 3.6 : 1.2}rem`,
 								right: `${showCloseButton ? 3.6 : 1.2}rem`,
@@ -154,14 +161,13 @@ function onAbort(all = false) {
 				</div>
 				<div
 					frame-container
-					:style="{
-						height: h + 'px',
-						width: w + 'px',
-					}"
+					@transitionend="updateSize(0)"
+					:style="sizeStyle"
 				>
 					<transition-group :name="transition">
 						<div
 							frame-content
+							frame-animation-element
 							v-for="(el, i) in stack"
 							:key="el.uid"
 							:ref="
@@ -180,6 +186,15 @@ function onAbort(all = false) {
 							</keep-alive>
 						</div>
 					</transition-group>
+					<transition name="fade">
+						<div
+							frame-animation-element
+							frame-loading-cover
+							v-if="loading"
+						>
+							<chasing-circle :scale="5" />
+						</div>
+					</transition>
 				</div>
 			</div>
 		</transition>
@@ -229,6 +244,7 @@ export function editLocale(title, name = {}) {
 	right: 0;
 	bottom: 0;
 	pointer-events: none;
+	overscroll-behavior: none;
 	* {
 		pointer-events: all;
 	}
@@ -359,6 +375,23 @@ export function editLocale(title, name = {}) {
 				padding: 2rem 1.2rem;
 			}
 		}
+		[frame-loading-cover] {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: var(--cf-next-next-level);
+			-webkit-backdrop-filter: blur(2px);
+			backdrop-filter: blur(2px);
+			& > * {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				opacity: 0.5;
+			}
+		}
 	}
 }
 // Frame container animation
@@ -366,7 +399,7 @@ export function editLocale(title, name = {}) {
 	&-enter-active,
 	&-leave-active {
 		transition-duration: 0.5s;
-		& * {
+		& *:not([frame-loading-cover]) {
 			transition: none !important;
 		}
 	}
@@ -382,11 +415,10 @@ export function editLocale(title, name = {}) {
 	}
 }
 // Frame content animation
+[frame-animation-element] {
+	transition-duration: 0.8s !important;
+}
 .push {
-	&-left-enter-active,
-	&-right-enter-active {
-		transition-delay: 0.1s;
-	}
 	&-left-enter-from,
 	&-right-leave-to {
 		transform: translateX(50%);
@@ -396,6 +428,15 @@ export function editLocale(title, name = {}) {
 	&-left-leave-to {
 		transform: translateX(-50%);
 		opacity: 0;
+	}
+}
+.fade {
+	&-enter-from,
+	&-leave-to {
+		opacity: 0;
+	}
+	&-leave-active {
+		transition-delay: 0.2s;
 	}
 }
 </style>
