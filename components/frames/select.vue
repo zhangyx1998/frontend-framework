@@ -17,7 +17,7 @@
 					</g>
 				</svg>
 			</div>
-			<div option-name>{{ option.name }}</div>
+			<div option-name><locale-name :name="option.name" /></div>
 			<div option-key v-if="showKey">{{ option.key }}</div>
 		</Responsive>
 	</div>
@@ -87,7 +87,7 @@ export default defineComponent({
 			border: 1px solid var(--ct-gray-dark);
 			&,
 			* {
-				transition: .1s;
+				transition: 0.1s;
 				transition-delay: 0;
 			}
 			svg {

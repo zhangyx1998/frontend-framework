@@ -1,3 +1,4 @@
+/* eslint-env node, browser */
 import { defineStore } from 'pinia'
 import createApi from '@CL/api'
 import sha256 from '@CL/sha256'
@@ -24,7 +25,11 @@ export default defineStore('user', {
 		 * @returns {Boolean} Indicates whether login was successful
 		 */
 		async login(login, password, onFail = () => { }) {
-			return await api.login({ login, password: sha256(password) })
+			return await api.login({
+				login,
+				password: sha256(password),
+				persistent: !!window?.navigator?.standalone
+			})
 				.then(async res => {
 					if (!res.ok) {
 						onFail(await res.text())

@@ -72,6 +72,26 @@ $ = function pushStack(title, component, { abortable = true } = {}, ...args) {
 					RETURN(...args) {
 						this.$emit('return', ...args)
 					},
+					LOAD(...args) {
+						loading.value = true
+						return new Promise(async (res, rej) => {
+							do {
+								try {
+									args = (await Promise.all(args)).map(
+										arg => {
+											if (typeof arg === 'function') return arg()
+											return arg
+										}
+									)
+								} catch (e) {
+									console.error(e)
+									rej(e)
+								}
+							} while (args.filter(p => p instanceof Promise).length)
+							loading.value = false
+							res(...args)
+						})
+					},
 					...(component?.methods || {})
 				},
 			}),
@@ -107,7 +127,7 @@ function onAbort(all = false) {
 
 <template>
 	<div frame-wrapper>
-		<div frame-background :display="display" @click="onAbort(true)"></div>
+		<div frame-background :display="display"></div>
 		<transition name="frame">
 			<div frame-window v-if="display" @transitionend="updateSize(0)">
 				<div frame-header>
@@ -344,7 +364,7 @@ export function editLocale(title, name = {}) {
 			overflow-x: hidden;
 			overflow-y: scroll;
 			@media (max-width: 719px) {
-				max-height: 80vh;
+				max-height: 85vh;
 				width: 100vw;
 			}
 			@media (min-width: 720px) {
@@ -381,15 +401,15 @@ export function editLocale(title, name = {}) {
 			left: 0;
 			right: 0;
 			bottom: 0;
-			background-color: var(--cf-next-next-level);
+			background-color: var(--cf);
 			-webkit-backdrop-filter: blur(2px);
 			backdrop-filter: blur(2px);
+			opacity: 0.6;
 			& > * {
 				position: absolute;
 				top: 50%;
 				left: 50%;
 				transform: translate(-50%, -50%);
-				opacity: 0.5;
 			}
 		}
 	}
@@ -436,7 +456,8 @@ export function editLocale(title, name = {}) {
 		opacity: 0;
 	}
 	&-leave-active {
-		transition-delay: 0.2s;
+		transition-duration: 0.5s;
+		transition-delay: 0.1s;
 	}
 }
 </style>
