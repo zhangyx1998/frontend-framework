@@ -43,7 +43,7 @@ const gitHash = await exec('git describe --always --dirty')
 console.log(('> '+ `[HASH] ${gitHash}`.underline).green)
 writeFileSync(
 	resolve(PROJECT_VAR, 'dist/VERSION'),
-	`[HASH]\n${gitHash}\n`
+	`[HASH] ${gitHash}`
 )
 
 // Make tarball for upload
@@ -66,7 +66,7 @@ await ensureLogin(domain)
 // Upload
 if (await upload(domain, resolve(PROJECT_ROOT, tarballPath)))
 	console.log(`
-─────────────────────────────────────────────
+_____________________________________________
       ____      ___     _   _    _____ 
      |  _ ╲    / _ ╲   | ╲ | |  | ____|
      | | | |  | | | |  |  ╲| |  |  _|  

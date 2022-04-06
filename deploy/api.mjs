@@ -5,7 +5,7 @@ import { read, hash } from './utils.mjs'
 
 export async function ensureLogin(host) {
 	while (!await checkLogin(host)) await login(host)
-	console.log(`> Logged in into ${host} successfully`.green)
+	console.log(`> Logged into ${host} successfully`.green)
 }
 
 export async function checkLogin(host) {
