@@ -59,12 +59,10 @@ export default defineStore('user', {
 			}
 			const result = await api.logout()
 				.then(async res => {
-					if (!res.ok)
-						onFail(await res.text())
+					if (!res.ok) onFail(await res.text())
 					return res.ok
 				})
-			if (result)
-				this.$reset()
+			if (result) this.$reset()
 			return result
 		},
 		/**

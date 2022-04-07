@@ -37,7 +37,7 @@ export const session = new class {
 		data.domain[domain] = Object.fromEntries(
 			setHeader.map(el => {
 				const
-					[ body ] = el.split(';'),
+					[body] = el.split(';'),
 					[key, val] = body.split('=', 2)
 				return [key, val]
 			})

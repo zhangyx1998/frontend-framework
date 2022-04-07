@@ -72,7 +72,7 @@ export async function upload(_host, distPath) {
 		method = 'PUT',
 		cookie = session.getCookie(_host)
 	console.log(`> ${method} https://${host}${path}`.green)
-	const stream = createReadStream(distPath),
+	const stream = createReadStream(distPath, { highWaterMark: 8 * 1024 }),
 		{ size } = statSync(distPath)
 	console.log(`> Total size: ${size}`.green)
 	await new Promise(r => stream.on('open', r))
@@ -81,7 +81,9 @@ export async function upload(_host, distPath) {
 			https
 				.request(
 					{
-						method, host, path,
+						method,
+						host,
+						path,
 						headers: {
 							'Content-Type': 'application/tar+gzip',
 							'Content-Length': size,
