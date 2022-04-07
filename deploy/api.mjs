@@ -72,7 +72,7 @@ export async function upload(_host, distPath) {
 		method = 'PUT',
 		cookie = session.getCookie(_host)
 	console.log(`> ${method} https://${host}${path}`.green)
-	const stream = createReadStream(distPath, { highWaterMark: 8 * 1024 }),
+	const stream = createReadStream(distPath),
 		{ size } = statSync(distPath)
 	console.log(`> Total size: ${size}`.green)
 	await new Promise(r => stream.on('open', r))
