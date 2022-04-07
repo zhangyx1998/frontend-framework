@@ -15,7 +15,6 @@ export async function exec(...args) {
 }
 
 export async function spawn(cmd, ...args) {
-	// const cmd = args.map(str => str.trim()).join(' && ')
 	// console.log(cmd.underline)
 	return await new Promise((res, rej) => {
 		const proc = _spawn(cmd, args, { cwd: PROJECT_ROOT })
@@ -32,12 +31,10 @@ export async function read(prompt, password = false, optional = false) {
 		terminal: true
 	})
 	if (password) rlInterface._writeToOutput = str => {
-		if (/^[a-z0-9,.<>/?;:'"([{}\])\\=+\-_|*&^%$#@!~`]$/gi.test(str))
-			process.stdout.write('*')
+		if (/^[a-z0-9,.<>/?;:'"([{}\])\\=+\-_|*&^%$#@!~`]$/gi.test(str)) process.stdout.write('*')
 		else if (str.startsWith(prompt)) {
 			process.stdout.write(prompt.padEnd(str.length, '*'))
-		} else
-			process.stdout.write(str)
+		} else process.stdout.write(str)
 	}
 	return await new Promise(
 		(res, rej) => rlInterface.question(prompt, res)
