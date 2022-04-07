@@ -15,10 +15,12 @@ await checkGit()
 const { last, domainList } = session
 console.log(`List of previously used domains:
 ${
-	domainList.map((d, i) => d === last
-		? `[${i}] `.dim + d.underline + ' (last used)'.dim
-		: `[${i}] `.dim + d
-	)
+	domainList
+		.map((d, i) => d === last
+			? `[${i}] `.dim + d.underline + ' (last used)'.dim
+			: `[${i}] `.dim + d
+		)
+		.join('\n')
 }
 ─────────────────────────────────────────────
 `.trim())
@@ -40,7 +42,7 @@ console.log(`
 Writing distribution metadata
 `.trim())
 const gitHash = await exec('git describe --always --dirty')
-console.log(('> '+ `[HASH] ${gitHash}`.underline).green)
+console.log(`> ${`[HASH] ${gitHash}`.underline}`.green)
 writeFileSync(
 	resolve(PROJECT_VAR, 'dist/VERSION'),
 	`[HASH] ${gitHash}`
@@ -51,8 +53,9 @@ console.log(`
 ─────────────────────────────────────────────
 Creating tarball
 `.trim())
-if (existsSync(resolve(PROJECT_ROOT, tarballPath)))
-	await exec(`rm -f ${tarballPath}`)
+if (existsSync(resolve(PROJECT_ROOT, tarballPath))) await exec(
+	`rm -f ${tarballPath}`
+)
 await spawn('tar', 'czvf', tarballPath, '-C', distPath, '.')
 console.log('> tarball created'.green)
 console.log(`> ${await exec(`file ${tarballPath}`)}`.dim)
@@ -64,8 +67,7 @@ Uploading to deployment server
 `.trim())
 await ensureLogin(domain)
 // Upload
-if (await upload(domain, resolve(PROJECT_ROOT, tarballPath)))
-	console.log(`
+if (await upload(domain, resolve(PROJECT_ROOT, tarballPath))) console.log(`
 _____________________________________________
       ____      ___     _   _    _____ 
      |  _ ╲    / _ ╲   | ╲ | |  | ____|
