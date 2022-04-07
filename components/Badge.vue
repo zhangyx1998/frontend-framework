@@ -60,7 +60,7 @@ defineProps({
 		}
 		&.gray {
 			--ct: var(--ct-gray-dark);
-			--cf: var(--cb-gray)
+			--cf: var(--cf-next-next-level)
 		}
 	}
 }

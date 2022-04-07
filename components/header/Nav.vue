@@ -11,7 +11,7 @@ const collapse = ref(window.innerWidth < 720),
 	user = useUserStore(),
 	redirecting = ref(false),
 	route = useRoute(),
-	domain = location.host
+	{ host } = location
 window.addEventListener('resize', () => {
 	collapse.value = window.innerWidth < 720
 })
@@ -46,14 +46,14 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
-				:to="`/redirect/to/docs.${domain}/`"
+				:to="`/redirect/to/docs.${host}/`"
 				title="项目资料"
 				>项目资料</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
-				:to="`/redirect/to/forum.${domain}/`"
+				:to="`/redirect/to/forum.${host}/`"
 				title="讨论区"
 				>讨论区</nav-link
 			>

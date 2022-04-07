@@ -195,7 +195,7 @@ const props = defineProps({
 	&[content-left] > * {
 		text-align: left;
 	}
-	&[align-center] {
+	&[content-center] {
 		align-items: center;
 	}
 	&[content-center] > * {

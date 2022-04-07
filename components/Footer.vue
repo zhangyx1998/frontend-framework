@@ -5,9 +5,12 @@
 <template>
 	<Container class="footer">
 		<div>京公网安备XXXXXXXXXXXXXXX号</div>
-		<div>京ICP备XXXXXXXX号</div>
+		<div><a href="http://beian.miit.gov.cn/">京ICP备2022009803号</a></div>
 		<div>版权所有: 一生一芯团队</div>
-		<div>Web Platform Contributor(s): Yuxuan Zhang</div>
+		<div style="display: flex; flex-wrap: warp;">
+			Web Platform Developer(s):
+			<badge>Yuxuan Zhang</badge>
+		</div>
 		<div>Operations Feedback: <a href="mailto:xiebiwei@ict.ac.cn">Email</a></div>
 		<div>Technical Feedback: <a href="mailto:yuxuan@yuxuanzhang.net">Email</a></div>
 	</Container>
@@ -33,7 +36,7 @@
 	padding: 1em 10vw;
 	/* Appearance */
 	background-color: var(--cf-gray) !important;
-	color: var(--ct-gray);
+	color: var(--ct-gray-dark);
 	font-size: 0.9em;
 	/* Interaction */
 	user-select: none;
