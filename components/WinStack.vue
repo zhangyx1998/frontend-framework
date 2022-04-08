@@ -253,6 +253,14 @@ import LocaleEditor from './locale/Editor.frame.vue'
 export function editLocale(title, name = {}) {
 	return $(title, LocaleEditor, { abortable: true }, name)
 }
+import PR_inspect from './frames/progress-report/inspect.vue'
+import PR_submit from './frames/progress-report/submit.vue'
+import PR_update from './frames/progress-report/update.vue'
+export const ProgressReport = {
+	inspect: () => $('查看进度报告', PR_inspect),
+	submit: () => $('创建进度报告', PR_submit),
+	update: () => $('修改进度报告', PR_update),
+}
 </script>
 
 <style lang="scss" scoped>

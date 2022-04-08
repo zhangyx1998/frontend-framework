@@ -23,6 +23,7 @@ input {
 }
 
 html.light {
+	color-scheme: light;
 	--cf: white;
 	--ct: hsl(0, 0%, 20%);
 	--c-brand: hsl(212, 60%, 40%);
@@ -47,6 +48,7 @@ html.light {
 }
 
 html.dark {
+	color-scheme: dark;
 	--cf: hsl(215, 15%, 12%);
 	--ct: hsl(0, 0%, 90%);
 	--c-brand: hsl(212, 60%, 40%);

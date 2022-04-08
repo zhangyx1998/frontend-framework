@@ -199,7 +199,7 @@ function keyDown() {
 		&.gray {
 			--ct: var(--ct-gray);
 			--cf: var(--cf-next-level);
-			--ct-hover: var(--ct-gray-dark);
+			--ct-hover: var(--ct-gray-light);
 			--filter-hover: brightness(96%);
 			--filter-active: brightness(92%);
 		}
@@ -207,7 +207,7 @@ function keyDown() {
 		&.gray-brand {
 			--ct: var(--c-brand);
 			--cf: var(--cf-next-level);
-			--ct-hover: var(--c-brand-dark);
+			--ct-hover: var(--c-brand-light);
 			--filter-hover: brightness(96%);
 			--filter-active: brightness(92%);
 		}
