@@ -6,6 +6,7 @@
 				top: 50%;
 				left: 50%;
 				transform: translate(-50%, -100%);
+				opacity: 0.3;
 			"
 			:scale="5"
 			v-if="loading"

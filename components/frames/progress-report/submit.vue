@@ -8,20 +8,20 @@
 			"
 		>
 			报告正文
-			<btn
-				@click="
-					preview =
-						typeof preview === 'undefined'
-							? getPreview()
-							: undefined
-				"
-				type="solid gray-brand"
-				style="font-size: 0.8rem; margin: 0; padding: 0.3em"
-			>
-				<i :class="preview ? 'far fa-edit' : 'far fa-eye'"></i>&nbsp;
-				<span v-if="preview">编辑</span>
-				<span v-else>预览</span>
-			</btn>
+			<container flex-row option-group :pad="false">
+				<btn @click="toggleEdit" :type="btnType(mode === 'edit')">
+					<i class="far fa-edit"></i>&nbsp;
+					<span>编辑</span>
+				</btn>
+				<btn @click="togglePreview" :type="btnType(mode === 'preview')">
+					<i class="far fa-eye"></i>&nbsp;
+					<span>预览</span>
+				</btn>
+				<btn @click="toggleDiff" :type="btnType(mode === 'diff')">
+					<i class="fa fa-search"></i>&nbsp;
+					<span>Diff</span>
+				</btn>
+			</container>
 		</h3>
 		<container
 			round
@@ -31,15 +31,15 @@
 		>
 			<keep-alive>
 				<code-editor
-					v-if="typeof preview === 'undefined'"
+					v-if="mode === 'edit'"
 					ref="editor"
 					style="width: 100%; height: 100%"
-					placeholder="正文支持 Markdown 语法"
+					:code="content"
 					@update="update"
 				/>
 				<div
 					v-else
-					class="markdown-body"
+					markdown-body
 					style="
 						width: 100%;
 						height: 100%;
@@ -59,16 +59,18 @@
 </template>
 
 <script>
+import "@CR/markdown.scss"
 import { defineComponent, ref } from 'vue'
 import { marked } from 'marked';
 export default defineComponent({
-	setup(reportID) {
-		const content = ref('')
+	setup(reportID = undefined, original = null) {
 		return {
-			reportID,
+			reportID: ref(reportID),
+			original,
 			preview: ref(undefined),
 			editor: ref(null),
-			content,
+			content: ref(undefined),
+			showDiff: ref(false),
 			update(_content) {
 				// console.log(_content)
 				content.value = _content
@@ -76,7 +78,13 @@ export default defineComponent({
 		}
 	},
 	computed: {
-		result() {}
+		result() {},
+		mode() {
+			if (typeof this.content !== 'string') return undefined
+			if (typeof this.preview !== 'undefined') return 'preview'
+			if (this.showDiff) return 'diff'
+			return 'edit'
+		}
 	},
 	methods: {
 		reset() {
@@ -84,18 +92,55 @@ export default defineComponent({
 				option.value = option.initial
 			}
 		},
-		getPreview() {
-			return marked.parse(this.$refs.editor?.getContent() || '')
-		}
+		getContent() {
+			if (this.$refs.editor?.getContent()) {
+				return this.content = this.$refs.editor?.getContent()
+			} else {
+				return this.content
+			}
+		},
+		btnType(activated = false) {
+			return activated ? 'solid brand' : 'solid gray-brand'
+		},
+		toggleEdit() {
+			this.preview = undefined
+			this.showDiff = false
+		},
+		togglePreview() {
+			this.preview = marked.parse(this.getContent())
+			this.showDiff = false
+		},
+		toggleDiff() {
+			this.getContent()
+			this.preview = undefined
+			this.showDiff = true
+		},
+	},
+	mounted() {
+		if (!this.content)
+			this.LOAD(
+				fetch('/templates/progress-report.md')
+					.then(res => res.text())
+					.then(text => this.content = text)
+			)
 	}
 })
 </script>
 
 <style lang="scss" scoped>
-@import "@CR/markdown.css";
 [progress-report] {
 	& > * {
 		margin-bottom: 10px;
+	}
+}
+[option-group] {
+	border-radius: 5px;
+	overflow: hidden;
+	& > * {
+		border-radius: 0 !important;
+		font-size: 0.8rem !important;
+		margin: 0 !important;
+		padding: 0.3em 0.8em !important;
 	}
 }
 </style>
