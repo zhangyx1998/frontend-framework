@@ -189,7 +189,7 @@ const props = defineProps({
 		display: block;
 		height: 100%;
 	}
-	&[align-left] {
+	&[content-left] {
 		align-items: flex-start;
 	}
 	&[content-left] > * {

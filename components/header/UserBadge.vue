@@ -14,7 +14,7 @@ const user = useUserStore(),
 // Active title route match
 watch(() => route.path, checkPath)
 function checkPath(path) {
-	active.value = path.startsWith('/settings') || (
+	active.value = path.startsWith('/notifications') || (
 		path.startsWith('/user') && route.params?.userID == user.userID
 	)
 }
@@ -22,8 +22,8 @@ function checkPath(path) {
 const active = ref(false)
 watch(active, () => {
 	const { path } = route
-	if (path.startsWith('/settings'))
-		emit('active', '账号设置')
+	if (path.startsWith('/notifications'))
+		emit('active', '通知列表')
 	else if (path.startsWith(`/user/${user.userID}`))
 		emit('active', '我的主页')
 })
@@ -53,13 +53,12 @@ function gotoHomePage() {
 				</responsive>
 				<div user-action-links>
 					<btn
-						to="/settings/"
 						:type="
-							route.path == '/settings/'
-								? 'solid brand'
-								: 'seamless'
+							route.path == '/notifications/'
+								? 'solid brand disabled'
+								: 'seamless disabled'
 						"
-						>账号设置</btn
+						>通知列表</btn
 					>
 					<btn
 						to="/logout"

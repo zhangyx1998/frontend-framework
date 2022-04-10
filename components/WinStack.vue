@@ -286,7 +286,8 @@ export const ProgressReport = {
 	bottom: 0;
 	-webkit-backdrop-filter: blur(2px);
 	backdrop-filter: blur(2px);
-	background-color: var(--cf-next-next-level);
+	background-color: var(--cf);
+	opacity: 0.6;
 	&[display="false"] {
 		opacity: 0;
 		pointer-events: none;
@@ -309,6 +310,7 @@ export const ProgressReport = {
 		top: 50%;
 		border-radius: 12px;
 		transform: translate(-50%, -50%);
+		transform-origin: 0 0;
 	}
 	box-shadow: 0 0 20px 0 var(--c-box-shadow);
 	[frame-header] {
@@ -376,7 +378,7 @@ export const ProgressReport = {
 				width: 100vw;
 			}
 			@media (min-width: 720px) {
-				max-height: 60vh;
+				max-height: 90vh;
 				max-width: 80vw;
 				min-width: 360px;
 			}

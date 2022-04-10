@@ -1,5 +1,44 @@
 <template>
 	<container flex-column progress-report>
+		<h3>关联标签</h3>
+		<container tags flex-column :pad="false">
+			<container tag round next-level :pad="false">
+				<div tag-title>Git 提交</div>
+				<div tag-content>
+					<span style="margin-right: 1em"
+						><i class="fab fa-github"></i> Github</span
+					>
+					<badge>7e053f9</badge>
+				</div>
+				<btn type="seamless red">
+					<i class="fa fa-trash"></i>&nbsp; 删除
+				</btn>
+			</container>
+			<container tag round next-level :pad="false">
+				<div tag-title>讲义</div>
+				<div tag-content>
+					基础阶段 &gt; 支持RV64IM的单周期NPC &gt;
+					搭建面向riscv64-npc的运行时环境
+				</div>
+				<btn type="seamless red">
+					<i class="fa fa-trash"></i>&nbsp; 删除
+				</btn>
+			</container>
+			<container
+				tag
+				round
+				next-level
+				flex-center
+				:responsive="true"
+				style="
+					border: 2px dashed var(--cb-gray);
+					color: var(--ct-gray);
+					font-weight: bold;
+				"
+			>
+				<span>+ 添加记录</span>
+			</container>
+		</container>
 		<h3
 			style="
 				display: flex;
@@ -26,7 +65,7 @@
 		<container
 			round
 			next-level
-			style="width: 100%; min-width: 70vw; height: 20em"
+			style="width: 100%; min-width: 70vw; height: 36em"
 			:pad="false"
 		>
 			<keep-alive>
@@ -141,6 +180,41 @@ export default defineComponent({
 		font-size: 0.8rem !important;
 		margin: 0 !important;
 		padding: 0.3em 0.8em !important;
+	}
+}
+[tags] {
+	margin-bottom: 32px;
+	[tag] {
+		display: flex;
+		align-items: center;
+		user-select: none;
+		&:not(:first-child) {
+			margin-top: 18px;
+		}
+		padding: 0;
+		[tag-title] {
+			font-size: 0.9em;
+			font-weight: bold;
+			width: 6em;
+			padding: 0.5em 0;
+			text-align: center;
+			color: var(--ct-gray);
+			background-color: var(--cf-next-next-level);
+		}
+		[tag-content] {
+			flex-grow: 1;
+			overflow: hidden;
+			font-weight: bold;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			font-family: "Courier New", Courier, monospace;
+		}
+		& > * {
+			margin: 0;
+		}
+		& > *:not(:first-child):not(:last-child) {
+			margin: 0 1em;
+		}
 	}
 }
 </style>
