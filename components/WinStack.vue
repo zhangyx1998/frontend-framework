@@ -246,8 +246,8 @@ export function prompt(title, content) {
 	return $(title, Prompt, { abortable: true }, content)
 }
 import Select from './frames/select.vue'
-export function select(title, options, showKey = true, abortable = true) {
-	return $(title, Select, { abortable }, options, showKey)
+export function select(title, options, { showKey = true, abortable = true, hook } = {}) {
+	return $(title, Select, { abortable }, options, showKey, hook)
 }
 import LocaleEditor from './locale/Editor.frame.vue'
 export function editLocale(title, name = {}) {

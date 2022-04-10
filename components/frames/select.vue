@@ -22,7 +22,7 @@
 		</Responsive>
 	</div>
 	<div btn-group>
-		<btn type="solid green" @click="RETURN(result)">确定</btn>
+		<btn type="solid green" @click="submit">确定</btn>
 		<btn type="solid gray" @click="reset">重置</btn>
 	</div>
 </template>
@@ -30,13 +30,22 @@
 <script>
 import { defineComponent, ref } from 'vue'
 export default defineComponent({
-	setup(options = [], showKey = false) {
-		options = ref(options.map((
-			[key, name = key, value = false, disabled = false]
-		) => (
-			{ key, name, value, initial: value, disabled }
-		)))
-		return { options, showKey }
+	setup(options = [], showKey = false, hook = () => {}) {
+		const mapping = ([
+			key, name = key, value = false, disabled = false
+		]) => ({
+			key, name, value, initial: value, disabled
+		})
+		let promise
+		if (options instanceof Promise) {
+			promise = options
+			options = ref([])
+			promise.then(arr => options.value.push(...arr.map(mapping)))
+		} else options = ref(options.map(mapping))
+		return { options, promise, showKey, hook }
+	},
+	mounted() {
+		if (this.promise instanceof Promise) this.LOAD(this.promise)
 	},
 	computed: {
 		result() {
@@ -50,6 +59,11 @@ export default defineComponent({
 			for (const option of this.options) {
 				option.value = option.initial
 			}
+		},
+		async submit() {
+			const { result } = this
+			await this.hook(result)
+			this.RETURN(result)
 		}
 	}
 })

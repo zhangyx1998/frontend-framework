@@ -198,6 +198,9 @@ const props = defineProps({
 	&[content-center] {
 		align-items: center;
 	}
+	&[content-stretch] {
+		align-items: stretch;
+	}
 	&[content-center] > * {
 		text-align: center;
 	}
