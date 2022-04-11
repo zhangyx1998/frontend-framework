@@ -172,7 +172,9 @@ config.rules['spellcheck/spell-checker'].push({
 		'unprocessable',
 		'jsonwebtoken',
 		'uploader',
-		'formatter'
+		'formatter',
+		'replacer',
+		'collapsable'
 	],
 	'skipIfMatch': [
 		'http://[^s]*',
