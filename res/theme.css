@@ -51,7 +51,7 @@ html.dark {
 	color-scheme: dark;
 	--cf: hsl(215, 15%, 12%);
 	--ct: hsl(0, 0%, 90%);
-	--c-brand: hsl(212, 60%, 40%);
+	--c-brand: hsl(212, 50%, 50%);
 	--c-brand-light: hsl(212, 60%, 60%);
 	--c-brand-dark: hsl(212, 60%, 30%);
 	--c-brand-contrast: hsl(0, 0%, 80%);
