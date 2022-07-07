@@ -53,6 +53,30 @@ function onLoading(state) {
 	}
 	if (state) updateSize()
 }
+// LOAD and RETURN marco function
+function RETURN(...args) {
+	onReturn(...args)
+}
+function LOAD(...args) {
+	onLoading(true)
+	return new Promise(async (res, rej) => {
+		do {
+			try {
+				args = (await Promise.all(args)).map(
+					arg => {
+						if (typeof arg === 'function') return arg()
+						return arg
+					}
+				)
+			} catch (e) {
+				console.error(e)
+				rej(e)
+			}
+		} while (args.filter(p => p instanceof Promise).length)
+		onLoading(false)
+		res(...args)
+	})
+}
 // Initialize exposed enqueue function
 let counter = 0
 $ = function pushStack(title, component, { abortable = true } = {}, ...args) {
@@ -63,37 +87,15 @@ $ = function pushStack(title, component, { abortable = true } = {}, ...args) {
 				...component,
 				setup() {
 					if (typeof component?.setup === 'function')
-						return component?.setup(...args)
+						return {
+							RETURN,
+							LOAD,
+							...component?.setup(...args)
+						}
 					else
-						return { args }
+						return { RETURN, LOAD, args }
 				},
-				emits: ['return', 'loading', ...(component?.emits || [])],
-				methods: {
-					RETURN(...args) {
-						this.$emit('return', ...args)
-					},
-					LOAD(...args) {
-						loading.value = true
-						return new Promise(async (res, rej) => {
-							do {
-								try {
-									args = (await Promise.all(args)).map(
-										arg => {
-											if (typeof arg === 'function') return arg()
-											return arg
-										}
-									)
-								} catch (e) {
-									console.error(e)
-									rej(e)
-								}
-							} while (args.filter(p => p instanceof Promise).length)
-							loading.value = false
-							res(...args)
-						})
-					},
-					...(component?.methods || {})
-				},
+				emits: ['return', 'loading', ...(component?.emits || [])]
 			}),
 			uid: counter = ++counter | 0,
 			abortable,
