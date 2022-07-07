@@ -1,7 +1,22 @@
-import { createReadStream, statSync } from 'fs'
+import { createReadStream, readFileSync, statSync } from 'fs'
 import https from 'https'
 import { session, deploy } from './env.mjs'
 import { read, hash } from './utils.mjs'
+
+const
+	httpsArgs = {},
+	{ ca } = Object.fromEntries(
+		process.argv
+			.map(str => {
+				const [key, ...val] = str.split('=')
+				if (val.length) return [key, val.join('=')]
+			})
+			.filter(el => el)
+	)
+
+if (ca) https.globalAgent.options.ca = readFileSync(ca)
+
+console.log({ ca }, httpsArgs)
 
 export async function ensureLogin(host) {
 	while (!await checkLogin(host)) await login(host)
@@ -97,11 +112,7 @@ export async function upload(_host, distPath) {
 							let text = ''
 							response.on('data', chunk => text += chunk)
 							response.on('end', () => {
-								console.log(`Upload FAILED (${
-									response.statusCode
-								}): ${
-									text.underline
-								}`.red)
+								console.log(`Upload FAILED (${response.statusCode}): ${text.underline}`.red)
 								res(false)
 							})
 						}
