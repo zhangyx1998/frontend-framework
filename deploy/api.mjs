@@ -15,8 +15,7 @@ const
 	)
 
 if (ca) https.globalAgent.options.ca = readFileSync(ca)
-
-console.log({ ca }, httpsArgs)
+// console.log({ ca }, httpsArgs)
 
 export async function ensureLogin(host) {
 	while (!await checkLogin(host)) await login(host)
