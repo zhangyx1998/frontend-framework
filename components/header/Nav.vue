@@ -69,7 +69,7 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 				@active="activeTitle"
 				to="/redirect/to/docs.qq.com/sheet/DT29weHpIRWNnYlFl?tab=BB08J2"
 				title="学习记录"
-				>学习记录</nav-link
+				><i class="fa fa-link"></i>学习记录</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
