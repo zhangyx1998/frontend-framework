@@ -41,28 +41,35 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 				@active="activeTitle"
 				to="/"
 				title="主页"
-				>主页</nav-link
+				><i class="fa fa-home"></i>主页</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
 				to="/post"
 				title="公告列表"
-				>公告</nav-link
+				><i class="fa fa-bullhorn"></i>公告</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
 				to="/redirect/docs/"
 				title="项目资料"
-				><i class="fa fa-link" style="opacity: 0.6"></i>&nbsp;项目资料</nav-link
+				>项目资料</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
 				to="/redirect/forum/"
 				title="讨论区"
-				><i class="fa fa-link" style="opacity: 0.6"></i>&nbsp;讨论区</nav-link
+				>讨论区</nav-link
+			>
+			<nav-link
+				:disabled="redirecting"
+				@active="activeTitle"
+				to="/redirect/to/docs.qq.com/sheet/DT29weHpIRWNnYlFl?tab=BB08J2"
+				title="学习记录"
+				>学习记录</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"

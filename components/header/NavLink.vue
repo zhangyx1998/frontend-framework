@@ -64,6 +64,15 @@ checkUrl()
 	font-weight: 500;
 	background: none !important;
 	display: block;
+	:deep(i) {
+		margin-right: 0.5em;
+	}
+	&:not(.active) {
+		color: var(--ct-gray);
+		:deep(i) {
+			opacity: 0.5;
+		}
+	}
 	[collapse="false"] & {
 		height: 100%;
 		margin: 0 0.2em !important;
