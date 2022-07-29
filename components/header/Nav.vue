@@ -46,16 +46,23 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
+				to="/post"
+				title="公告列表"
+				>公告</nav-link
+			>
+			<nav-link
+				:disabled="redirecting"
+				@active="activeTitle"
 				to="/redirect/docs/"
 				title="项目资料"
-				>项目资料</nav-link
+				><i class="fa fa-link" style="opacity: 0.6"></i>&nbsp;项目资料</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
 				@active="activeTitle"
 				to="/redirect/forum/"
 				title="讨论区"
-				>讨论区</nav-link
+				><i class="fa fa-link" style="opacity: 0.6"></i>&nbsp;讨论区</nav-link
 			>
 			<nav-link
 				:disabled="redirecting"
