@@ -1,7 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import NavLink from './NavLink.vue'
-import UserBadge from './UserBadge.vue'
 import useUserStore from '@CS/user'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -18,6 +16,10 @@ window.addEventListener('resize', () => {
 function activeTitle(val) {
 	title.value = val || 'Untitled'
 	expand.value = false
+}
+const navData={
+	redirecting:redirecting.value,
+	activeTitle:activeTitle
 }
 watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'))
 </script>
@@ -36,70 +38,7 @@ watch(() => route.path, path => redirecting.value = path.startsWith('/redirect/'
 			:collapse="collapse"
 			v-show="!collapse || expand"
 		>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				to="/"
-				title="主页"
-				><i class="fa fa-home"></i>主页</nav-link
-			>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				to="/post"
-				title="公告列表"
-				><i class="fa fa-bullhorn"></i>公告</nav-link
-			>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				to="/redirect/docs/"
-				title="项目资料"
-				>项目资料</nav-link
-			>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				to="/redirect/forum/"
-				title="讨论区"
-				>讨论区</nav-link
-			>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				to="/redirect/to/docs.qq.com/sheet/DT29weHpIRWNnYlFl?tab=BB08J2"
-				title="学习记录"
-				><i class="fa fa-link"></i>学习记录</nav-link
-			>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				v-if="!user.loginState"
-				to="/register"
-				title="注册"
-				>注册</nav-link
-			>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				v-if="!user.loginState"
-				to="/login"
-				title="登录"
-				>登录</nav-link
-			>
-			<nav-link
-				:disabled="redirecting"
-				@active="activeTitle"
-				v-if="user.loginState"
-				to="/space"
-				title="个人空间"
-				>个人空间</nav-link
-			>
-			<user-badge
-				:disabled="redirecting"
-				@active="activeTitle"
-				v-if="user.loginState"
-			/>
+			<slot name="nav" :navData="navData"></slot>
 		</div>
 	</transition>
 	<div v-if="collapse" class="page-title">{{ title }}</div>

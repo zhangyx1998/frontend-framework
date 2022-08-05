@@ -39,7 +39,9 @@ watch(
 		<img alt="YSYX logo" class="logo" src="../res/logo/line.png" />
 		<div style="flex-grow: 1"></div>
 		<ColorSchemeSwitch style="margin-right: 8px;" />
-		<Nav />
+		<Nav #nav="{navData}">
+			<slot name="nav" :navData="navData"></slot>
+		</Nav>
 		<transition name="prog">
 			<div class="progress" v-if="progress"></div>
 		</transition>
