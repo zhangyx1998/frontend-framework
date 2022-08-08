@@ -1,6 +1,7 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useNavStore } from '@CS/nav'
 const props = defineProps({
 	// Used for vue-router
 	to: {
@@ -17,6 +18,7 @@ const props = defineProps({
 	disabled: Boolean,
 	active: Boolean,
 })
+const nav = useNavStore();
 const emit = defineEmits(['active'])
 // Router watcher
 const route = useRoute(),
@@ -32,8 +34,9 @@ watch(
 )
 const isActive = ref(false)
 watch(isActive, (active) => {
-	if (active) emit('active', props.title)
+	if (active) nav.activeTitle(props.title)
 })
+const disabled = computed(() => props.disabled || nav.redirecting)
 checkUrl()
 </script>
 
