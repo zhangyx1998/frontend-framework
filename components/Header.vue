@@ -7,6 +7,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  colorVar: {
+    type: String,
+    default: 'white'
+  },
+
 });
 const progress = ref(false);
 let timeout = undefined;
@@ -16,7 +21,7 @@ watch(
     if (timeout !== undefined) {
       try {
         clearTimeout(timeout);
-      } catch (e) {}
+      } catch (e) { }
       timeout = undefined;
     }
     if (now) {
@@ -71,7 +76,7 @@ watch(
   justify-content: space-between;
   align-items: center;
   /* Appearance */
-  background-color: var(--cf);
+  background-color: v-bind('props.colorVar');
   border-bottom: 1px solid var(--cb-gray-light);
   box-shadow: 0 0 5px 0 hsla(0, 0%, 0%, 0.1);
 }
@@ -94,16 +99,20 @@ watch(
   width: 90%;
   opacity: 1;
 }
+
 .prog-enter-from {
   width: 0%;
   opacity: 1;
 }
+
 .prog-enter-active {
   transition: 2s ease-in-out;
 }
+
 .prog-leave-active {
   transition: 0.3s ease-in-out;
 }
+
 .prog-leave-to {
   width: 100%;
   opacity: 0;
