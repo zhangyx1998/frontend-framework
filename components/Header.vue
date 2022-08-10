@@ -77,6 +77,7 @@ watch(
   align-items: center;
   /* Appearance */
   background-color: v-bind('props.colorVar');
+  /* background-color: var(--cf); */
   border-bottom: 1px solid var(--cb-gray-light);
   box-shadow: 0 0 5px 0 hsla(0, 0%, 0%, 0.1);
 }
