@@ -56,7 +56,7 @@ Creating tarball
 if (existsSync(resolve(PROJECT_ROOT, tarballPath))) await exec(
 	`rm -f ${tarballPath}`
 )
-await spawn('tar', 'czvf', tarballPath, '-C', distPath, '.')
+await spawn('tar', 'czvf', tarballPath, '-C', distPath, '.', '--dereference')
 console.log('> tarball created'.green)
 console.log(`> ${await exec(`file ${tarballPath}`)}`.dim)
 
