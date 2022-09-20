@@ -8,10 +8,6 @@ const
 			type: Boolean,
 			default: false,
 		},
-		colorVar: {
-			type: String,
-			default: 'white'
-		},
 		bgColor: {
 			type: String,
 			default: 'var(--cf)'
