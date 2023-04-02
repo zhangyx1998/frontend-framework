@@ -11,9 +11,9 @@ defineProps({
 });
 </script>
 <template>
-	<router-link :to="to" v-if="to"><slot /></router-link>
-	<a :href="href" v-else-if="href"><slot /></a>
-	<div v-else><slot /></div>
+	<router-link :to="to" v-if="to"><slot></slot></router-link>
+	<a :href="href" v-else-if="href"><slot></slot></a>
+	<div v-else><slot></slot></div>
 </template>
 
 <style scoped>

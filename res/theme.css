@@ -87,7 +87,7 @@ html.light {
     --ct-red: hsl(0, 100%, 25%);
 }
 
-html.dark  {
+html.dark {
     --cb-green: hsl(120, 41%, 33%);
     --cf-green: hsla(120, 50%, 30%, 0.2);
     --ct-green: hsl(120, 40%, 60%);

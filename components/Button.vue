@@ -66,7 +66,7 @@ function keyDown() {
 		@touchleave="touch = false"
 		:tabindex="!disabled ? '0' : ''"
 	>
-		<span><slot /></span>
+		<span><slot></slot></span>
 		<span
 			style="display: hidden"
 			tabindex="-1"
@@ -142,10 +142,11 @@ function keyDown() {
 	}
 	/* type: seamless */
 	&.seamless {
-		background-color: transparent;
 		--cf: transparent;
-		--filter-hover: brightness(110%);
-		--filter-active: brightness(120%);
+		--filter-hover: none;
+		--filter-active: brightness(50%);
+		--cf-hover: var(--cf-next-next-level);
+		--cf-active: var(--cf-next-next-level);
 		&.brand {
 			--ct: var(--c-brand);
 		}
@@ -217,7 +218,7 @@ function keyDown() {
 		--cf: transparent;
 		--cf-hover: var(--cf-next-level);
 		--cf-active: var(--cf-next-next-level);
-		border-width: 1px !important;
+		border-width: 2px !important;
 		&.red {
 			--ct: var(--ct-red);
 		}

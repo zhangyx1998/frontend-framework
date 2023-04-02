@@ -1,5 +1,6 @@
 @import './layout.css';
 @import './theme.css';
+@import './animation.css';
 
 * {
 	box-sizing: border-box;
