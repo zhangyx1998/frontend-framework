@@ -66,13 +66,13 @@ function keyDown() {
 		@touchleave="touch = false"
 		:tabindex="!disabled ? '0' : ''"
 	>
-		<span><slot /></span>
-		<span
+		<span button-content><slot /></span>
+		<div
 			style="display: hidden"
 			tabindex="-1"
 			:ref="(_) => (pseudo = _)"
 			@blur="touch = false"
-		></span>
+		></div>
 	</tri>
 </template>
 
@@ -86,8 +86,14 @@ function keyDown() {
 	border-radius: 0.66em;
 	font-weight: bold;
 	font-size: 0.9em;
-	margin: 0.4em;
-	padding: 0.6em 0.8em;
+    &:not(.compact) {
+        margin: 0.4em;
+        padding: 0.6em 0.8em;
+    }
+    &.compact {
+        margin: 0.2em;
+        padding: 0.4em 0.6em;
+    }
 	line-height: 1em;
 	border: 2px solid var(--cb);
 	transition-duration: 0.5s;
@@ -241,14 +247,15 @@ function keyDown() {
 	&.link {
 		padding-left: 0;
 		padding-right: 0;
-		text-decoration: underline;
-		color: var(--ct-gray);
-		font-weight: unset;
-		font-size: unset;
-		color: unset !important;
-		display: inline-block;
-		margin: 0;
-		background: none;
+        display: inline-block;
+        margin: 0;
+        background: none;
+        span {
+            text-decoration: underline;
+            color: unset;
+            font-weight: unset;
+            font-size: unset;
+        }
 		&:hover {
 			color: var(--ct-gray-dark);
 		}
