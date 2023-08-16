@@ -90,7 +90,7 @@ $ = function pushStack(title, component, { abortable = true } = {}, ...args) {
 						return {
 							RETURN,
 							LOAD,
-							...component?.setup(...args)
+							...(component?.setup(...args) ?? {})
 						}
 					else
 						return { RETURN, LOAD, args }
@@ -236,8 +236,8 @@ function onAbort(all = false) {
 export let $
 // Default stack function export
 import Confirm from './frames/confirm.vue'
-export function confirm(title, content, { abortable = false, color, text } = {}) { 
-	return $(title, Confirm, { abortable }, content, { color, text })
+export function confirm(title, content, { abortable = false, color, ...config } = {}) { 
+	return $(title, Confirm, { abortable }, content, { color, ...config })
 }
 import Alert from './frames/alert.vue'
 export function alert(title, content) {
@@ -391,12 +391,17 @@ export const ProgressReport = {
 				justify-content: center;
 				padding: 1em 0;
 				border-top: 1px solid var(--cb-gray-light);
-				& > * {
+				&:not([compact]) > * {
 					margin: 1em;
 					flex-grow: 1;
 					max-width: 10em;
 					padding: 0.8em 2em;
 				}
+                &[compact] > * {
+					// flex-grow: 1;
+					max-width: 10em;
+					padding: 0.6em 0.8em;
+                }
 			}
 			:deep([frame-prompt]) {
 				text-align: left;
