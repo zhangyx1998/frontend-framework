@@ -112,6 +112,13 @@ const props = defineProps({
 			padding-right: var(--space-h);
 		}
 	}
+	&[w1024] {
+		@media (min-width: 1024px) {
+			--space-h: calc((100vw - 1024px) / 2);
+			padding-left: var(--space-h);
+			padding-right: var(--space-h);
+		}
+	}
 	&[flex-wrap] {
 		flex-wrap: wrap;
 	}
