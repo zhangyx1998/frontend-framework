@@ -6,7 +6,7 @@ export { default as vHeader } from './Header.vue'
 // UI Building Blocks
 export { default as Responsive } from './Responsive.vue'
 export { default as StatusCode } from './StatusCode.vue'
-export { default as CodeEditor } from './CodeEditor.vue'
+// export { default as CodeEditor } from './CodeEditor.vue'
 export { default as Container } from './Container.vue'
 export { default as Redirect } from './Redirect.vue'
 export { default as Badge } from './Badge.vue'
