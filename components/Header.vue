@@ -1,50 +1,53 @@
 <script setup>
-import Nav from "./header/Nav.vue";
-import { ref, watch } from "vue";
+import Nav from './header/Nav.vue';
+import { ref, watch } from 'vue';
 // Loading animation
 const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
+    loading: {
+        type: Boolean,
+        default: false,
+    },
 });
 const progress = ref(false);
 let timeout = undefined;
 watch(
-  () => props.loading,
-  (now, old) => {
-    if (timeout !== undefined) {
-      try {
-        clearTimeout(timeout);
-      } catch (e) {}
-      timeout = undefined;
+    () => props.loading,
+    (now, old) => {
+        if (timeout !== undefined) {
+            try {
+                clearTimeout(timeout);
+            } catch (e) { console.warn(e) }
+            timeout = undefined;
+        }
+        if (now) {
+            if (!progress.value) progress.value = true;
+        } else {
+            // Loading ends
+            timeout = setTimeout(() => {
+                progress.value = false;
+                timeout = undefined;
+            }, 200);
+        }
     }
-    if (now) {
-      if (!progress.value) progress.value = true;
-    } else {
-      // Loading ends
-      timeout = setTimeout(() => {
-        progress.value = false;
-        timeout = undefined;
-      }, 200);
-    }
-  }
 );
 </script>
 
 <template>
-  <div class="header-placeholder"></div>
-  <div class="header">
-    <slot name="title"></slot>
-    <Nav>
-      <template #nav>
-        <slot name="nav"></slot>
-      </template>
-    </Nav>
-    <transition name="prog">
-      <div class="progress" v-if="progress"></div>
-    </transition>
-  </div>
+    <div class="header-placeholder"></div>
+    <div class="header">
+        <slot name="title"></slot>
+        <Nav>
+            <template #nav>
+                <slot name="nav"></slot>
+            </template>
+        </Nav>
+        <transition name="prog">
+            <div
+                v-if="progress"
+                class="progress"
+            ></div>
+        </transition>
+    </div>
 </template>
 
 <style>

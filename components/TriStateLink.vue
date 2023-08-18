@@ -1,23 +1,33 @@
 <script setup>
 defineProps({
-	href: {
-		type: String,
-		default: ''
-	},
-	to: {
-		type: String,
-		default: ''
-	},
+    href: {
+        type: String,
+        default: ''
+    },
+    to: {
+        type: String,
+        default: ''
+    },
 });
 </script>
 <template>
-	<router-link :to="to" v-if="to"><slot /></router-link>
-	<a :href="href" v-else-if="href"><slot /></a>
-	<div v-else><slot /></div>
+    <router-link
+        v-if="to"
+        :to="to"
+    >
+        <slot></slot>
+    </router-link>
+    <a
+        v-else-if="href"
+        :href="href"
+    ><slot></slot></a>
+    <div v-else>
+        <slot></slot>
+    </div>
 </template>
 
 <style scoped>
 * {
-	text-decoration: none;
+  text-decoration: none;
 }
 </style>
