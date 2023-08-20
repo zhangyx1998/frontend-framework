@@ -1,4 +1,4 @@
-// Default stack function export
+// Default window stack function export
 import Window from './setup.js';
 export default Window;
 // Export basic frame APIs

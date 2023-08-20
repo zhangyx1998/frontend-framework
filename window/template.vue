@@ -2,7 +2,9 @@
 import { defineComponent } from 'vue';
 import * as setup from './setup';
 export default defineComponent({
-    setup() { return setup }
+    setup() {
+        return { ...setup };
+    }
 });
 </script>
 
