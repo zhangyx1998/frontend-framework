@@ -2,7 +2,7 @@
 import Window from './setup.js';
 export default Window;
 // Export basic frame APIs
-import Alert from './basics/alert.vue';
+import Alert from './basics/Alert.vue';
 export const alert = Window(Alert, 'Alert');
 
 import Confirm from './basics/Confirm.vue';
