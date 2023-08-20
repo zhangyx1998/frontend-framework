@@ -28,21 +28,21 @@ const props = defineProps({
 let _focus_by_mouse_ = false;
 function focus() {
     if (_focus_by_mouse_) {
-        pseudo.value.focus();
+        pseudo.value?.focus();
     }
     _focus_by_mouse_ = false;
 }
 function mouseDown() {
     _focus_by_mouse_ = true;
-    pseudo.value.focus();
+    pseudo.value?.focus();
 }
 function touchDown() {
     _focus_by_mouse_ = true;
-    pseudo.value.focus();
+    pseudo.value?.focus();
 }
 function keyDown() {
     _focus_by_mouse_ = true;
-    pseudo.value.focus();
+    pseudo.value?.focus();
 }
 </script>
 
