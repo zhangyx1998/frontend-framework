@@ -46,7 +46,7 @@ checkUrl();
 <template>
     <responsive>
         <tri
-            nav-link
+            role="nav-link"
             :class="[
                 active || isActive ? 'active' : '',
                 disabled ? 'disabled' : '',
@@ -59,8 +59,8 @@ checkUrl();
     </responsive>
 </template>
 
-<style scoped lang="scss">
-[nav-link] {
+<style lang="scss">
+[role=nav-link] {
   /* Appearance */
   font-size: 0.92em;
   text-decoration: none;
@@ -70,12 +70,12 @@ checkUrl();
   font-weight: 500;
   background: none !important;
   display: block;
-  :deep(i) {
+  & > i {
     margin-right: 0.5em;
   }
   &:not(.active) {
     color: var(--ct-gray);
-    :deep(i) {
+    i {
       opacity: 0.5;
     }
   }
